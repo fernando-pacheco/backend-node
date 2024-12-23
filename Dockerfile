@@ -1,5 +1,7 @@
 FROM node:20-slim
 
+RUN apt-get update -y && apt-get install -y openssl
+
 RUN npm install -g pnpm
 
 WORKDIR /usr/src/app
@@ -10,7 +12,7 @@ RUN pnpm install
 
 COPY . .
 
-RUN pnpm add typescript ts-node @types/node @types/fastify --save-dev
+# RUN pnpm add typescript ts-node @types/node @types/fastify --save-dev
 
 RUN pnpm exec tsc
 
