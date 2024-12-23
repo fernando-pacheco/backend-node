@@ -29,7 +29,10 @@ app.register(fastifySwaggerUi, {
 })
 app.register(fastifyCors, { origin: "*" })
 
-app.listen({ port: 3333 }).then(() => {
+app.listen({
+    port: Number(process.env.API_PORT) || 3000,
+    path: process.env.API_URL,
+}).then(() => {
     console.log("HTTP server running!")
 })
 
