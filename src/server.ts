@@ -25,7 +25,7 @@ app.register(fastifySwagger, {
     transform: jsonSchemaTransform,
 })
 app.register(fastifySwaggerUi, {
-    routePrefix: "/docs",
+    routePrefix: "/api",
 })
 app.register(fastifyCors, { origin: "*" })
 
