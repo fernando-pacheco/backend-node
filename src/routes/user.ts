@@ -1,11 +1,11 @@
 import z from "zod"
-import { FastifyTypedInstance } from "./types"
 import {
     CreateUserRequestSchema,
     UserResponseSchema,
     UsersListResponseSchema,
-} from "./schemas/user"
-import { createUser, getUserByID, getUsers } from "./services/user"
+} from "../schemas/user"
+import { createUser, getUserByID, getUsers } from "../services/user"
+import { FastifyTypedInstance } from "../types"
 
 export async function routes(app: FastifyTypedInstance) {
     app.get(
@@ -65,7 +65,7 @@ export async function routes(app: FastifyTypedInstance) {
             const { id } = request.params
 
             try {
-                const user = await getUserByID(id)
+                const user = getUserByID(id)
 
                 if (!user) {
                     reply.status(404).send({ message: "User not found." })
