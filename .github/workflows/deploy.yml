@@ -1,0 +1,50 @@
+name: Deploy API NodeTypescript
+
+on:
+  push:
+    branches:
+      - qa
+  pull_request:
+    branches:
+      - qa
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: qa
+      url: ${{ secrets.VPS_URL }}
+
+    steps:
+      # Passo 1: Fazer o checkout do código
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Passo 2: Configurar Docker Buildx (opcional)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Passo 3: Copiar os arquivos para o VPS via SSH
+      - name: Copy files to VPS
+        uses: appleboy/scp-action@v0.1.1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_PRIVATE_KEY }}
+          port: 22
+          source: "."
+          target: "/home/ubuntu/projetos"  # Caminho do seu projeto no VPS
+
+      # Passo 4: SSH para VPS e rodar os comandos do Docker
+      - name: SSH to VPS and Deploy
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/projetos
+            docker compose down
+            docker compose build
+            docker compose up -d
