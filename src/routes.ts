@@ -6,11 +6,13 @@ import {
     UsersListResponseSchema,
 } from "./schemas/user"
 import { createUser, getUserByID, getUsers } from "./services/user"
+import { RouteShorthandOptions } from "fastify"
 
 interface RouteProps {
     app: FastifyTypedInstance
     endpoint: string
     resource: () => void
+    routeSchema: RouteShorthandOptions
 }
 
 export async function routes(app: FastifyTypedInstance) {
@@ -89,12 +91,6 @@ export async function routes(app: FastifyTypedInstance) {
     )
 }
 
-async function route({ app, endpoint, resource }: RouteProps) {
-    app.get(
-        endpoint,
-        {
-            schema: {},
-        },
-        resource
-    )
+async function route({ app, endpoint, routeSchema, resource }: RouteProps) {
+    app.get(endpoint, routeSchema, resource)
 }
