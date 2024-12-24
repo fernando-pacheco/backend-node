@@ -4,7 +4,7 @@ RUN apt-get update -y && apt-get install -y openssl
 
 RUN npm install -g pnpm
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/backend-node
 
 COPY package.json pnpm-lock.yaml ./
 
