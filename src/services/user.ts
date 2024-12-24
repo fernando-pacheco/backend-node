@@ -23,6 +23,7 @@ export async function getUserByID(id: string): Promise<User | null> {
             id: true,
             name: true,
             email: true,
+            created_at: true,
         },
     })
 

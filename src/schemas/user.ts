@@ -4,6 +4,7 @@ export const UserResponseSchema = z.object({
     id: z.string(),
     name: z.string(),
     email: z.string().email(),
+    created_at: z.date(),
 })
 
 export const CreateUserRequestSchema = z.object({

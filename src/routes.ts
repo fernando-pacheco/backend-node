@@ -7,7 +7,15 @@ import {
 } from "./schemas/user"
 import { createUser, getUserByID, getUsers } from "./services/user"
 
+interface RouteProps {
+    app: FastifyTypedInstance
+    endpoint: string
+    resource: () => void
+}
+
 export async function routes(app: FastifyTypedInstance) {
+    // route(app, "/users", UsersListResource)
+    // route(app, "/users/:id", UserResource)
     app.get(
         "/users",
         {
@@ -78,5 +86,15 @@ export async function routes(app: FastifyTypedInstance) {
                 reply.status(500).send({ message: "Internal server Error" })
             }
         }
+    )
+}
+
+async function route({ app, endpoint, resource }: RouteProps) {
+    app.get(
+        endpoint,
+        {
+            schema: {},
+        },
+        resource
     )
 }
