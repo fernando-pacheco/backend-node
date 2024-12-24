@@ -4,7 +4,7 @@ export const UserResponseSchema = z.object({
     id: z.string(),
     name: z.string(),
     email: z.string().email(),
-    created_at: z.date(),
+    created_at: z.date().optional(),
 })
 
 export const UserCreateSchema = z.object({
