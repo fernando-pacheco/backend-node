@@ -7,9 +7,18 @@ export const UserResponseSchema = z.object({
     created_at: z.date(),
 })
 
-export const CreateUserRequestSchema = z.object({
+export const UserCreateSchema = z.object({
     name: z.string().min(1, "Name is required"),
     email: z.string().email("Invalid email address"),
 })
 
+export const UserUpdateSchema = z.object({
+    name: z.string().optional(),
+    email: z.string().email("Invalid email address").optional(),
+})
+
 export const UsersListResponseSchema = z.array(UserResponseSchema)
+
+export const UserIDParamsSchema = z.object({
+    id: z.string().min(1, "User ID is required"),
+})
