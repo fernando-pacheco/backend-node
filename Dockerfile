@@ -12,8 +12,6 @@ RUN pnpm install
 
 COPY . .
 
-# RUN pnpm add typescript ts-node @types/node @types/fastify --save-dev
-
 RUN pnpm exec tsc
 
 EXPOSE 3333
