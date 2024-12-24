@@ -14,7 +14,7 @@ import {
 } from "../src/resources/user"
 import { UserResponseSchema } from "../src/schemas/user"
 
-jest.mock("../src/models/user") // Mock das funções do modelo
+jest.mock("../src/models/user")
 
 describe("UserListResource", () => {
     it("should return a list of users", async () => {
@@ -23,12 +23,11 @@ describe("UserListResource", () => {
             { id: "2", name: "Jane Doe", email: "jane@example.com" },
         ]
 
-        ;(getUsers as jest.Mock).mockResolvedValue(mockUsers) // Mocka a função getUsers para retornar mockUsers
+        ;(getUsers as jest.Mock).mockResolvedValue(mockUsers)
+        const result = await UserListResource()
 
-        const result = await UserListResource() // Chama o recurso
-
-        expect(getUsers).toHaveBeenCalledTimes(1) // Verifica se getUsers foi chamado uma vez
-        expect(result).toEqual(mockUsers) // Verifica se a resposta é a esperada
+        expect(getUsers).toHaveBeenCalledTimes(1)
+        expect(result).toEqual(mockUsers)
     })
 })
 
@@ -37,7 +36,7 @@ describe("UserCreateResource", () => {
         const requestBody = { name: "John Doe", email: "john@example.com" }
         const mockUser = { id: "1", ...requestBody }
 
-        ;(createUser as jest.Mock).mockResolvedValue(mockUser) // Mocka a função createUser para retornar mockUser
+        ;(createUser as jest.Mock).mockResolvedValue(mockUser)
 
         const mockRequest = { body: requestBody }
         const mockReply = {
@@ -45,11 +44,11 @@ describe("UserCreateResource", () => {
             send: jest.fn(),
         }
 
-        await UserCreateResource(mockRequest, mockReply) // Chama o recurso
+        await UserCreateResource(mockRequest, mockReply)
 
-        expect(createUser).toHaveBeenCalledWith(requestBody) // Verifica se a função foi chamada com o corpo correto
-        expect(mockReply.status).toHaveBeenCalledWith(201) // Verifica se a resposta tem status 201
-        expect(mockReply.send).toHaveBeenCalledWith(mockUser) // Verifica se o mockUser foi enviado
+        expect(createUser).toHaveBeenCalledWith(requestBody)
+        expect(mockReply.status).toHaveBeenCalledWith(201)
+        expect(mockReply.send).toHaveBeenCalledWith(mockUser)
     })
 })
 
@@ -61,7 +60,7 @@ describe("UserGetResource", () => {
             email: "john@example.com",
         }
 
-        ;(getUserByID as jest.Mock).mockResolvedValue(mockUser) // Mocka a função getUserByID para retornar mockUser
+        ;(getUserByID as jest.Mock).mockResolvedValue(mockUser)
 
         const mockRequest = { params: { id: "1" } }
         const mockReply = {
@@ -69,17 +68,17 @@ describe("UserGetResource", () => {
             send: jest.fn(),
         }
 
-        await UserGetResource(mockRequest, mockReply) // Chama o recurso
+        await UserGetResource(mockRequest, mockReply)
 
-        expect(getUserByID).toHaveBeenCalledWith("1") // Verifica se a função foi chamada com o ID correto
-        expect(mockReply.status).toHaveBeenCalledWith(200) // Verifica se a resposta tem status 200
+        expect(getUserByID).toHaveBeenCalledWith("1")
+        expect(mockReply.status).toHaveBeenCalledWith(200)
         expect(mockReply.send).toHaveBeenCalledWith(
             UserResponseSchema.parse(mockUser)
-        ) // Verifica se o mockUser foi enviado
+        )
     })
 
     it("should return 404 if user is not found", async () => {
-        ;(getUserByID as jest.Mock).mockResolvedValue(null) // Simula que o usuário não foi encontrado
+        ;(getUserByID as jest.Mock).mockResolvedValue(null)
 
         const mockRequest = { params: { id: "1" } }
         const mockReply = {
@@ -87,12 +86,12 @@ describe("UserGetResource", () => {
             send: jest.fn(),
         }
 
-        await UserGetResource(mockRequest, mockReply) // Chama o recurso
+        await UserGetResource(mockRequest, mockReply)
 
-        expect(mockReply.status).toHaveBeenCalledWith(404) // Verifica se a resposta tem status 404
+        expect(mockReply.status).toHaveBeenCalledWith(404)
         expect(mockReply.send).toHaveBeenCalledWith({
             message: "User not found.",
-        }) // Verifica a mensagem de erro
+        })
     })
 })
 
@@ -109,8 +108,8 @@ describe("UserPutResource", () => {
             email: "john@newdomain.com",
         }
 
-        ;(getUserByID as jest.Mock).mockResolvedValue(mockUser) // Mocka a função getUserByID
-        ;(updateUser as jest.Mock).mockResolvedValue(updatedUser) // Mocka a função updateUser
+        ;(getUserByID as jest.Mock).mockResolvedValue(mockUser)
+        ;(updateUser as jest.Mock).mockResolvedValue(updatedUser)
 
         const mockRequest = {
             params: { id: "1" },
@@ -121,14 +120,14 @@ describe("UserPutResource", () => {
             send: jest.fn(),
         }
 
-        await UserPutResource(mockRequest, mockReply) // Chama o recurso
+        await UserPutResource(mockRequest, mockReply)
 
-        expect(getUserByID).toHaveBeenCalledWith("1") // Verifica se a função foi chamada com o ID correto
+        expect(getUserByID).toHaveBeenCalledWith("1")
         expect(updateUser).toHaveBeenCalledWith("1", {
             email: "john@newdomain.com",
-        }) // Verifica se a função foi chamada com o corpo correto
-        expect(mockReply.status).toHaveBeenCalledWith(200) // Verifica se a resposta tem status 200
-        expect(mockReply.send).toHaveBeenCalledWith(updatedUser) // Verifica se o usuário atualizado foi enviado
+        })
+        expect(mockReply.status).toHaveBeenCalledWith(200)
+        expect(mockReply.send).toHaveBeenCalledWith(updatedUser)
     })
 
     it("should return 400 if the body is empty", async () => {
@@ -138,10 +137,10 @@ describe("UserPutResource", () => {
             send: jest.fn(),
         }
 
-        await UserPutResource(mockRequest, mockReply) // Chama o recurso
+        await UserPutResource(mockRequest, mockReply)
 
-        expect(mockReply.status).toHaveBeenCalledWith(400) // Verifica se a resposta tem status 400
-        expect(mockReply.send).toHaveBeenCalledWith({ message: "Empty body." }) // Verifica a mensagem de erro
+        expect(mockReply.status).toHaveBeenCalledWith(400)
+        expect(mockReply.send).toHaveBeenCalledWith({ message: "Empty body." })
     })
 })
 
@@ -153,8 +152,8 @@ describe("UserDeleteResource", () => {
             email: "john@example.com",
         }
 
-        ;(getUserByID as jest.Mock).mockResolvedValue(mockUser) // Mocka a função getUserByID
-        ;(deleteUserByID as jest.Mock).mockResolvedValue(undefined) // Mocka a função deleteUserByID
+        ;(getUserByID as jest.Mock).mockResolvedValue(mockUser)
+        ;(deleteUserByID as jest.Mock).mockResolvedValue(undefined)
 
         const mockRequest = { params: { id: "1" } }
         const mockReply = {
@@ -162,13 +161,13 @@ describe("UserDeleteResource", () => {
             send: jest.fn(),
         }
 
-        await UserDeleteResource(mockRequest, mockReply) // Chama o recurso
+        await UserDeleteResource(mockRequest, mockReply)
 
-        expect(getUserByID).toHaveBeenCalledWith("1") // Verifica se a função foi chamada com o ID correto
-        expect(deleteUserByID).toHaveBeenCalledWith("1") // Verifica se a função foi chamada com o ID correto
-        expect(mockReply.status).toHaveBeenCalledWith(200) // Verifica se a resposta tem status 200
+        expect(getUserByID).toHaveBeenCalledWith("1")
+        expect(deleteUserByID).toHaveBeenCalledWith("1")
+        expect(mockReply.status).toHaveBeenCalledWith(200)
         expect(mockReply.send).toHaveBeenCalledWith({
             message: `User {1} successfully deleted.`,
-        }) // Verifica a mensagem de sucesso
+        })
     })
 })
