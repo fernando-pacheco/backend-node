@@ -1,82 +1,60 @@
-import z from "zod"
+import { FabricRoute } from "../utils/fabric-route"
 import {
-    CreateUserRequestSchema,
-    UserResponseSchema,
-    UsersListResponseSchema,
-} from "../schemas/user"
-import { createUser, getUserByID, getUsers } from "../services/user"
+    UserGetRouteSchema,
+    UserCreateRouteSchema,
+    UserListRouteSchema,
+    UserDeleteRouteSchema,
+    UserPutRouteSchema,
+} from "./schemas/user"
+import {
+    UserCreateResource,
+    UserDeleteResource,
+    UserGetResource,
+    UserListResource,
+    UserPutResource,
+} from "../resources/user"
 import { FastifyTypedInstance } from "../types"
 
-export async function routes(app: FastifyTypedInstance) {
-    app.get(
-        "/users",
-        {
-            schema: {
-                tags: ["Users"],
-                description: "List users",
-                response: {
-                    200: UsersListResponseSchema,
-                },
-            },
-        },
-        async () => {
-            const users = await getUsers()
-            return users
-        }
-    )
+export function UserListRoutes(app: FastifyTypedInstance) {
+    FabricRoute({
+        app,
+        endpoint: "/users",
+        method: "get",
+        docs: UserListRouteSchema,
+        resource: UserListResource,
+    })
 
-    app.post(
-        "/users",
-        {
-            schema: {
-                tags: ["Users"],
-                description: "Create a new user",
-                body: CreateUserRequestSchema,
-                response: {
-                    201: UserResponseSchema,
-                },
-            },
-        },
-        async (request, reply) => {
-            const { name, email } = request.body
-            const newUser = await createUser(name, email)
-            reply.status(201).send(newUser)
-        }
-    )
+    FabricRoute({
+        app,
+        endpoint: "/users",
+        method: "post",
+        docs: UserCreateRouteSchema,
+        resource: UserCreateResource,
+    })
+}
 
-    app.get(
-        "/users/:id",
-        {
-            schema: {
-                tags: ["Users"],
-                description: "Get user by ID",
-                params: z.object({
-                    id: z.string().min(1, "User ID is required"),
-                }),
-                response: {
-                    200: UserResponseSchema,
-                    404: z.object({
-                        message: z.string(),
-                    }),
-                },
-            },
-        },
-        async (request, reply) => {
-            const { id } = request.params
+export function UserRoutes(app: FastifyTypedInstance) {
+    FabricRoute({
+        app,
+        endpoint: "/users/:id",
+        method: "get",
+        docs: UserGetRouteSchema,
+        resource: UserGetResource,
+    })
 
-            try {
-                const user = getUserByID(id)
+    FabricRoute({
+        app,
+        endpoint: "/users/:id",
+        method: "put",
+        docs: UserPutRouteSchema,
+        resource: UserPutResource,
+    })
 
-                if (!user) {
-                    reply.status(404).send({ message: "User not found." })
-                    return
-                }
-
-                const validatedResponse = UserResponseSchema.parse(user)
-                reply.status(200).send(validatedResponse)
-            } catch (error) {
-                reply.status(500).send({ message: "Internal server Error" })
-            }
-        }
-    )
+    FabricRoute({
+        app,
+        endpoint: "/users/:id",
+        method: "delete",
+        docs: UserDeleteRouteSchema,
+        resource: UserDeleteResource,
+    })
 }
