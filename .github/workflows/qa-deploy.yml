@@ -3,11 +3,11 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - master
+      - main
       - qa
   pull_request:
     branches:
-      - master
+      - main
       - qa
 
 jobs:
