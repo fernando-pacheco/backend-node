@@ -33,9 +33,10 @@ jobs:
 
       - name: Build Docker image
         run: |
-          IMAGE=$REGISTRY_SERVER/$GITHUB_REPOSITORY:$GITHUB_SHA
+          IMAGE="$GITHUB_REPOSITORY:$GITHUB_SHA"
           echo "Building Docker image: $IMAGE"
           docker build -t $IMAGE .
+      
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
