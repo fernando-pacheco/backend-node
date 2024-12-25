@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: deploy
 
 on:
   push:
@@ -20,7 +20,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # ou a versão que você estiver usando
+          node-version: '20'
 
       - name: Install pnpm
         run: npm install -g pnpm
@@ -36,7 +36,6 @@ jobs:
           IMAGE="$GITHUB_REPOSITORY:$GITHUB_SHA"
           echo "Building Docker image: $IMAGE"
           docker build -t $IMAGE .
-      
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -94,10 +93,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy using Docker Compose
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy using Docker Compose on Oracle VM
         run: |
           IMAGE=$REGISTRY_SERVER/$GITHUB_REPOSITORY:$GITHUB_SHA
-          echo "Deploying application with Docker Compose..."
+          echo "Deploying application to Oracle VM..."
           echo "Using image: $IMAGE"
-          docker compose -f docker-compose.yml down --remove-orphans
-          docker compose -f docker-compose.yml up -d
+
+          # SSH into the Oracle VM and perform the Docker Compose deployment
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} <<EOF
+            cd /path/to/your/project
+            docker compose -f docker-compose.yml down --remove-orphans
+            docker compose -f docker-compose.yml up -d
+          EOF
