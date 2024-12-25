@@ -34,16 +34,16 @@ jobs:
           pnpm run build
           pnpm test
 
-      # Etapa 5: Enviar os artefatos do build para a VM (usando SCP)
-      - name: Upload Build to VM
-        uses: appleboy/ssh-action@v0.1.1
+      # Etapa 5: Copiar arquivos para a VM via SCP
+      - name: Upload Build to VM via SCP
+        uses: appleboy/scp-action@v0.1.1
         with:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          source: "./"
-          target: "/home/${{ secrets.VM_USER }}/projetos"
+          source: "./*"  # Copiar todos os arquivos e pastas
+          target: "/home/${{ secrets.VM_USER }}/app"  # Destino na VM
 
       # Etapa 6: Conectar na VM e rodar o Docker Compose
       - name: Deploy application on VM
@@ -54,11 +54,15 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
+            # Instalar Docker e Docker Compose (caso não esteja instalado)
+            sudo apt-get update -y
+            sudo apt-get install -y docker.io docker-compose
+
             # Navegar até o diretório da aplicação
-            cd /home/${{ secrets.VM_USER }}/projetos
+            cd /home/${{ secrets.VM_USER }}/app
 
             # Parar e remover containers antigos
-            docker compose down
+            docker-compose down
 
             # Iniciar os containers via Docker Compose
-            docker compose up -d --build
+            docker-compose up -d --build
