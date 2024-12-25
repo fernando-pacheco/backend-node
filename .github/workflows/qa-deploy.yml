@@ -53,9 +53,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Push Docker image
+      - name: Define registry and image
         run: |
-          IMAGE=$REGISTRY_SERVER/$GITHUB_REPOSITORY:$GITHUB_SHA
+          REGISTRY_SERVER="docker.io"
+          IMAGE="$REGISTRY_SERVER/$GITHUB_REPOSITORY:$GITHUB_SHA"
           echo "Pushing Docker image: $IMAGE"
           docker push $IMAGE
 
