@@ -33,6 +33,7 @@ jobs:
           pnpm install
           pnpm run build
           pnpm test
+          echo ". ${{ secrets.VM_USER }}"
 
       # Etapa 5: Copiar arquivos para a VM via SCP
       - name: Upload Build to VM via SCP
