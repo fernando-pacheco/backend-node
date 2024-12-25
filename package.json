@@ -5,9 +5,9 @@
     "scripts": {
         "dev": "tsx watch src/server.ts",
         "build": "tsc && pnpm copy-prisma",
+        "test": "jest --coverage --coverageThreshold",
         "copy-prisma": "cp -R prisma dist/",
-        "prisma:generate": "prisma generate",
-        "prisma:migrate": "prisma migrate dev"
+        "start": "node dist/server.js"
     },
     "repository": {
         "type": "git",
