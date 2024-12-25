@@ -1,0 +1,64 @@
+name: qa-deploy
+
+on:
+  push:
+    branches:
+      - qa
+  pull_request:
+    branches:
+      - qa
+
+jobs:
+  qa-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Etapa 1: Check out o código
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Etapa 2: Configurar o Node.js
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.18.x
+
+      # Etapa 3: Instalar o pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      # Etapa 4: Instalar dependências e realizar o build
+      - name: Install dependencies and build
+        run: |
+          pnpm install
+          pnpm run build
+          pnpm test
+
+      # Etapa 5: Enviar os artefatos do build para a VM (usando SCP)
+      - name: Upload Build to VM
+        uses: appleboy/ssh-action@v0.1.1
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          source: "./"
+          target: "/home/${{ secrets.VM_USER }}/projetos"
+
+      # Etapa 6: Conectar na VM e rodar o Docker Compose
+      - name: Deploy application on VM
+        uses: appleboy/ssh-action@v0.1.1
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            # Navegar até o diretório da aplicação
+            cd /home/${{ secrets.VM_USER }}/projetos
+
+            # Parar e remover containers antigos
+            docker compose down
+
+            # Iniciar os containers via Docker Compose
+            docker compose up -d --build
