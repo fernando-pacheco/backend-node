@@ -1,30 +1,102 @@
-name: qa-deploy
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
+      - master
       - qa
   pull_request:
     branches:
+      - master
       - qa
 
 jobs:
-  qa-build:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
-      - name: Checking workdir  
-        run: echo "WORKDIR=$(pwd)" >> $GITHUB_ENV && echo $WORKDIR
 
-      - name: Install ssh keys
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # ou a versão que você estiver usando
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build project
+        run: pnpm build
+
+      - name: Build Docker image
         run: |
-          install -m 600 -D /dev/null ~/.ssh/id_rsa
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.VM_HOST }} > ~/.ssh/known_hosts
+          IMAGE=$REGISTRY_SERVER/$GITHUB_REPOSITORY:$GITHUB_SHA
+          echo "Building Docker image: $IMAGE"
+          docker build -t $IMAGE .
 
-      # - name: Connect with VM
-      #   run: |
-      #     ssh 
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifact
+          path: dist/
+
+  push:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Push Docker image
+        run: |
+          IMAGE=$REGISTRY_SERVER/$GITHUB_REPOSITORY:$GITHUB_SHA
+          echo "Pushing Docker image: $IMAGE"
+          docker push $IMAGE
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run tests with Jest
+        run: pnpm test
+
+      - name: Upload test coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-coverage
+          path: coverage/
+
+  deploy-app:
+    runs-on: ubuntu-latest
+    needs: push
+    environment: ${{ github.ref_name }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy using Docker Compose
+        run: |
+          IMAGE=$REGISTRY_SERVER/$GITHUB_REPOSITORY:$GITHUB_SHA
+          echo "Deploying application with Docker Compose..."
+          echo "Using image: $IMAGE"
+          docker compose -f docker-compose.yml down --remove-orphans
+          docker compose -f docker-compose.yml up -d
