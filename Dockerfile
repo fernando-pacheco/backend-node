@@ -12,7 +12,7 @@ RUN pnpm install
 
 COPY . .
 
-RUN pnpm exec tsc
+RUN pnpm build
 
 EXPOSE 3333
 
