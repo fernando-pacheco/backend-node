@@ -42,9 +42,12 @@ jobs:
     runs-on: qa-fpx-server
     needs: test
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
       - name: Deploy application
         run: |
           echo "Efetuando deploy da aplicação..."
           echo "Imagem atual: $IMAGE"
-          docker compose -f ./docker-compose.yml down --remove-orphans
-          docker compose -f ./docker-compose.yml up -d
+          docker compose down --remove-orphans
+          docker compose up -d
