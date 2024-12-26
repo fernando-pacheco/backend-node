@@ -10,7 +10,7 @@ on:
 
 env:
   COMMIT_HASH: ${{ github.sha }}
-  REF_REPO: ${{ github.repository }}
+  REPO_NAME: ${{ github.repository }}
   API_PORT: ${{ secrets.API_PORT }}
   API_URL: ${{ secrets.API_URL }}
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -25,9 +25,11 @@ jobs:
 
       - name: Build Docker image
         run: |
-          echo "REF_REPO=${{ env.REF_REPO }}"
+          echo "REPO_NAME=${{ env.REPO_NAME }}"
           echo "COMMIT_HASH=${{ env.COMMIT_HASH }}"
+          export REPO_REF=$(echo $REPO_NAME | cut -d'/' -f2)
           export IMAGE=$REF_REPO:${COMMIT_HASH:0:8}
+          echo "IMAGE=$IMAGE"
           docker build -t $IMAGE .    
 
 
