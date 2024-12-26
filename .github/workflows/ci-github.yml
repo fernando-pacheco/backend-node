@@ -60,6 +60,7 @@ jobs:
 
   deploy:
     runs-on: ${{ vars.SERVER_RUNS }}
+    environment: ${{ github.ref }}
     needs: test
     steps:
       - name: Download image artifact
