@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - qa
+      - main
   pull_request:
     branches:
       - qa
+      - main
 
 env:
   COMMIT_HASH: ${{ github.sha }}
@@ -22,6 +24,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Github variables
+        run: |
+          echo ${{ github.head_ref }}
+          echo ${{ github.base_ref }}
 
       - name: Build Docker image
         run: |
