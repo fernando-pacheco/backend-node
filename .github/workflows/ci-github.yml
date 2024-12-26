@@ -27,11 +27,13 @@ jobs:
 
       - name: Github variables
         run: |
-          echo "job ${{ github.job }}"
-          echo "job_wf_sha ${{ github.job_workflow_sha }}"
-          echo "trigger ${{ github.triggering_actor }}"
-          echo "server_url ${{ github.server_url }}"
-          echo "run_id ${{ github.run_id }}"
+          echo "ac_ref ${{ github.action_ref }}"
+          echo "ref ${{ github.ref }}"
+          echo "name ${{ github.ref_name }}"
+          echo "protec ${{ github.ref_protected }}"
+          echo "type ${{ github.ref_type }}"
+          echo "type ${{ github.secret_source }}"
+          echo "base_ref ${{ github.base_ref }}"
 
       - name: Build Docker image
         run: |
