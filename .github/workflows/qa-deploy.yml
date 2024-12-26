@@ -42,6 +42,7 @@ jobs:
       - name: Build Docker image
         run: |
           echo "IMAGE=${{ env.IMAGE_NAME }}" >> $GITHUB_ENV
+          echo "IMAGE=${{ env.IMAGE_NAME }}"
           docker build -t ${{ env.IMAGE_NAME }} .
 
   push:
