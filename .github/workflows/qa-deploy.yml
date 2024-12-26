@@ -23,33 +23,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Github References
-        run: |
-          echo ${{ github.action }}
-          echo ${{ github.action_path }}
-          echo ${{ github.action_ref }}
-          echo ${{ github.action_repository }}
-          echo ${{ github.action_status }}
-          echo ${{ github.actor }}
-          echo ${{ github.base_ref }}
-          echo ${{ github.env }}
-          echo ${{ github.event }}
-          echo ${{ github.event_name }}
-          echo ${{ github.event_path }}
-          echo ${{ github.head_ref }}
-          echo ${{ github.job }}
-          echo ${{ github.job_workflow_sha }}
-          echo ${{ github.path }}
-          echo ${{ github.ref }}
-          echo ${{ github.ref_name }}
-          echo ${{ github.ref_protected }}
-          echo ${{ github.ref_type }}
-          echo ${{ github.repository_owner }}
-          echo ${{ github.workflow_ref }}
-          echo ${{ github.workspace }}
-
       - name: Build Docker image
-        id: build_image
         run: |
           echo "Buildando a imagem..."
           REPO_REF=$(echo $REPO_NAME | cut -d'/' -f2)
@@ -61,7 +35,7 @@ jobs:
           echo "Imagem salva em image.txt"
 
       - name: Upload image artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: image
           path: image.txt
@@ -71,7 +45,7 @@ jobs:
     needs: build
     steps:
       - name: Download image artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: image
 
@@ -87,7 +61,7 @@ jobs:
     needs: test
     steps:
       - name: Download image artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: image
 
