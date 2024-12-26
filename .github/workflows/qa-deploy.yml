@@ -11,14 +11,16 @@ on:
 env:
   COMMIT_HASH: ${{ github.sha }}
   REPO_NAME: ${{ github.repository }}
-  API_PORT: $API_PORT
-  API_URL: $API_URL
-  DATABASE_URL: $DATABASE_URL
-  NODE_ENV: $.NODE_ENV
+  API_PORT: ${{ secrets.API_PORT }}
+  API_URL: ${{ secrets.API_URL }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  NODE_ENV: ${{ secrets.NODE_ENV }}
 
 jobs:
   build:
     runs-on: qa-fpx-server
+    outputs:
+      image: ${{ steps.build.outputs.image }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,7 +32,8 @@ jobs:
           export IMAGE=$REPO_REF:${COMMIT_HASH:0:8}
           echo "Realizando o build da imagem $IMAGE"
           docker build -t $IMAGE .
-          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+        env:
+          IMAGE: $IMAGE
 
 
   test:
@@ -40,9 +43,9 @@ jobs:
       - name: Run tests
         run: |
           echo "Rodando os testes com Jest. Aguarde..."
-          echo "Executando os testes na imagem $IMAGE"
-          echo "Executando comando 'docker run --rm $IMAGE pnpm test'"
-          docker run --rm $IMAGE pnpm test
+          echo "Executando os testes na imagem ${{ env.IMAGE }}"
+          echo "Executando comando 'docker run --rm ${{ env.IMAGE }} pnpm test'"
+          docker run --rm ${{ env.IMAGE }} pnpm test
 
           
   deploy:
@@ -52,6 +55,6 @@ jobs:
       - name: Deploy application
         run: |
           echo "Efetuando deploy da aplicação..."
-          echo "Imagem atual: $IMAGE"
+          echo "Imagem atual: ${{ env.IMAGE }}"
           docker compose down --remove-orphans
           docker compose up -d
