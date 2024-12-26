@@ -27,8 +27,8 @@ jobs:
 
       - name: Github variables
         run: |
-          echo ${{ github.head_ref }}
-          echo ${{ github.base_ref }}
+          echo ${{ github.env }}
+          echo ${{ github.ref }}
 
       - name: Build Docker image
         run: |
