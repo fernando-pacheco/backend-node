@@ -27,8 +27,11 @@ jobs:
 
       - name: Github variables
         run: |
-          echo ${{ github.env }}
-          echo ${{ github.ref }}
+          echo "workflow ${{ github.workflow }}"
+          echo "workspace ${{ github.workspace }}"
+          echo "event ${{ github.event }}"
+          echo "name ${{ github.event_name }}"
+          echo "path ${{ github.event_path }}"
 
       - name: Build Docker image
         run: |
