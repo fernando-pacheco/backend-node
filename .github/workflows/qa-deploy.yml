@@ -28,7 +28,7 @@ jobs:
           echo "REPO_NAME=${{ env.REPO_NAME }}"
           echo "COMMIT_HASH=${{ env.COMMIT_HASH }}"
           export REPO_REF=$(echo $REPO_NAME | cut -d'/' -f2)
-          export IMAGE=$REF_REPO:${COMMIT_HASH:0:8}
+          export IMAGE=$REPO_REF:${COMMIT_HASH:0:8}
           echo "IMAGE=$IMAGE"
           docker build -t $IMAGE .    
 
