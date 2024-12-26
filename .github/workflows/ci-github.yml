@@ -1,4 +1,4 @@
-name: deploy
+name: Pipeline para integração em ambientes de Homologação e Produção
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - qa
+      - main
 
 env:
   COMMIT_HASH: ${{ github.sha }}
