@@ -1,4 +1,4 @@
-name: deploy
+name: Pipeline para integração em ambientes de Homologação e Produção
 
 on:
   push:
