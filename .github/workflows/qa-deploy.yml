@@ -11,16 +11,14 @@ on:
 env:
   COMMIT_HASH: ${{ github.sha }}
   REPO_NAME: ${{ github.repository }}
-  API_PORT: ${{ secrets.API_PORT }}
-  API_URL: ${{ secrets.API_URL }}
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  NODE_ENV: ${{ secrets.NODE_ENV }}
+  API_PORT: $API_PORT
+  API_URL: $API_URL
+  DATABASE_URL: $DATABASE_URL
+  NODE_ENV: $.NODE_ENV
 
 jobs:
   build:
     runs-on: qa-fpx-server
-    outputs:
-      image: ${{ steps.build.outputs.image }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,7 +30,7 @@ jobs:
           export IMAGE=$REPO_REF:${COMMIT_HASH:0:8}
           echo "Realizando o build da imagem $IMAGE"
           docker build -t $IMAGE .
-          echo "::set-output name=image::$IMAGE"
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
 
 
   test:
