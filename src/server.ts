@@ -25,11 +25,14 @@ app.register(fastifySwagger, {
     transform: jsonSchemaTransform,
 })
 app.register(fastifySwaggerUi, {
-    routePrefix: "/docs",
+    routePrefix: "/api",
 })
 app.register(fastifyCors, { origin: "*" })
 
-app.listen({ port: 3333 }).then(() => {
+app.listen({
+    port: Number(process.env.API_PORT),
+    path: process.env.API_URL,
+}).then(() => {
     console.log("HTTP server running!")
 })
 

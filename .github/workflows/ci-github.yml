@@ -1,0 +1,76 @@
+name: Pipeline para integração em ambientes de Homologação e Produção
+
+on:
+  push:
+    branches:
+      - qa
+      - main
+  pull_request:
+    branches:
+      - qa
+      - main
+
+env:
+  COMMIT_HASH: ${{ github.sha }}
+  REPO_NAME: ${{ github.repository }}
+  API_PORT: ${{ secrets.API_PORT }}
+  API_URL: ${{ secrets.API_URL }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  NODE_ENV: ${{ secrets.NODE_ENV }}
+
+jobs:
+  build:
+    runs-on: ${{ vars.SERVER_RUNS }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          echo "Buildando a imagem..."
+          REPO_REF=$(echo $REPO_NAME | cut -d'/' -f2)
+          IMAGE=$NODE_ENV-$REPO_REF:${COMMIT_HASH:0:7}
+          echo "Realizando o build da imagem $IMAGE"
+          docker build -t $IMAGE .
+          
+          echo $IMAGE > image.txt
+          echo "Imagem salva em image.txt"
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: image
+          path: image.txt
+
+  test:
+    runs-on: ${{ vars.SERVER_RUNS }}
+    needs: build
+    steps:
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: image
+
+      - name: Run tests
+        run: |
+          IMAGE=$(cat image.txt)
+          echo "Rodando os testes com Jest. Aguarde..."
+          echo "Executando os testes na imagem $IMAGE"
+          docker run --rm $IMAGE pnpm test
+
+  deploy:
+    runs-on: ${{ vars.SERVER_RUNS }}
+    needs: test
+    steps:
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: image
+
+      - name: Deploy application
+        run: |
+          export IMAGE=$(cat image.txt)
+          echo "Efetuando deploy da aplicação..."
+          echo "Imagem atual: $IMAGE"
+          docker compose down --remove-orphans
+          docker compose up -d
