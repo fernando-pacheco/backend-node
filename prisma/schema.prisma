@@ -8,9 +8,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum PaymentMethod {
+  PIX
+  CREDIT
+  DEBIT
+  WALLET
+}
+
 model User {
   id         String   @id @default(cuid())
   name       String
   email      String   @unique
   created_at DateTime @default(now())
+}
+
+model Payment {
+  id             String        @id @default(cuid())
+  type           String
+  payment_method PaymentMethod
+  value          Float
+}
+
+model Product {
+  id    String @id @default(cuid())
+  name  String
+  price Float
 }
