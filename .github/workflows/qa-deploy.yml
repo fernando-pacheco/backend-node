@@ -19,20 +19,21 @@ env:
 jobs:
   build:
     runs-on: qa-fpx-server
+    outputs:
+      image: ${{ steps.build_image.outputs.image }}  # Definindo a saída
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Build Docker image
+        id: build_image  # Definindo um id para referenciar a saída
         run: |
           echo "Buildando a imagem..."
-          export REPO_REF=$(echo $REPO_NAME | cut -d'/' -f2)
-          export IMAGE=$REPO_REF:${COMMIT_HASH:0:7}
+          REPO_REF=$(echo $REPO_NAME | cut -d'/' -f2)
+          IMAGE=$REPO_REF:${COMMIT_HASH:0:7}
           echo "Realizando o build da imagem $IMAGE"
           docker build -t $IMAGE .
-        env:
-          IMAGE: $IMAGE
-
+          echo "image=$IMAGE" >> $GITHUB_ENV  # Usando GITHUB_ENV para passar a variável entre jobs
 
   test:
     runs-on: qa-fpx-server
@@ -41,11 +42,10 @@ jobs:
       - name: Run tests
         run: |
           echo "Rodando os testes com Jest. Aguarde..."
-          echo "Executando os testes na imagem ${{ env.IMAGE }}"
-          echo "Executando comando 'docker run --rm ${{ env.IMAGE }} pnpm test'"
-          docker run --rm ${{ env.IMAGE }} pnpm test
+          echo "Executando os testes na imagem ${{ env.image }}"  # Referenciando a variável de ambiente
+          echo "Executando comando 'docker run --rm ${{ env.image }} pnpm test'"
+          docker run --rm ${{ env.image }} pnpm test
 
-          
   deploy:
     runs-on: qa-fpx-server
     needs: test
@@ -53,6 +53,6 @@ jobs:
       - name: Deploy application
         run: |
           echo "Efetuando deploy da aplicação..."
-          echo "Imagem atual: ${{ env.IMAGE }}"
+          echo "Imagem atual: ${{ env.image }}"  # Referenciando a variável de ambiente
           docker compose down --remove-orphans
           docker compose up -d
