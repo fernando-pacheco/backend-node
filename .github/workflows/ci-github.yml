@@ -9,19 +9,21 @@ on:
 env:
   COMMIT_HASH: ${{ github.sha }}
   REPO_NAME: ${{ github.repository }}
-  API_PORT: ${{ secrets.API_PORT }}
-  API_URL: ${{ secrets.API_URL }}
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  NODE_ENV: ${{ secrets.NODE_ENV }}
 
 jobs:
   build:
-    runs-on: ${{ vars.SERVER_RUNS }}
+    runs-on: ${{ github.ref == 'refs/heads/qa' && 'qa-fpx-server' || 'prod-fpx-server' }}
+    environment: ${{ github.ref == 'refs/heads/qa' && 'qa' || 'prod' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Build Docker image
+        env:
+            API_URL: ${{ secrets.API_URL }}
+            API_PORT: ${{ secrets.API_PORT }}
+            DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            NODE_ENV: ${{ secrets.NODE_ENV }}
         run: |
           echo "Buildando a imagem..."
           REPO_REF=$(echo $REPO_NAME | cut -d'/' -f2)
@@ -39,7 +41,7 @@ jobs:
           path: image.txt
 
   test:
-    runs-on: ${{ vars.SERVER_RUNS }}
+    runs-on: ${{ github.ref == 'refs/heads/qa' && 'qa-fpx-server' || 'prod-fpx-server' }}
     needs: build
     steps:
       - name: Download image artifact
@@ -55,8 +57,7 @@ jobs:
           docker run --rm $IMAGE pnpm test
 
   deploy:
-    runs-on: ${{ vars.SERVER_RUNS }}
-    environment: ${{ github.ref }}
+    runs-on: ${{ github.ref == 'refs/heads/qa' && 'qa-fpx-server' || 'prod-fpx-server' }}
     needs: test
     steps:
       - name: Download image artifact
