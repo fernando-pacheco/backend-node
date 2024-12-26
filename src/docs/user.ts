@@ -4,10 +4,10 @@ import {
     UserResponseSchema,
     UsersListResponseSchema,
     UserUpdateSchema,
-} from "../../schemas/user"
-import { MessageResponseSchema } from "../../schemas/message"
+} from "../schemas/user"
+import { MessageResponseSchema } from "../schemas/message"
 
-export const UserListRouteSchema = {
+export const UserListDocSchema = {
     schema: {
         tags: ["Users"],
         description: "List users",
@@ -18,7 +18,7 @@ export const UserListRouteSchema = {
     },
 }
 
-export const UserCreateRouteSchema = {
+export const UserCreateDocSchema = {
     schema: {
         tags: ["Users"],
         description: "Create a new user",
@@ -30,7 +30,7 @@ export const UserCreateRouteSchema = {
     },
 }
 
-export const UserGetRouteSchema = {
+export const UserGetDocSchema = {
     schema: {
         tags: ["Users"],
         description: "Get user by ID",
@@ -43,7 +43,7 @@ export const UserGetRouteSchema = {
     },
 }
 
-export const UserPutRouteSchema = {
+export const UserPutDocSchema = {
     schema: {
         tags: ["Users"],
         description: "Put user, selected by ID",
@@ -58,7 +58,7 @@ export const UserPutRouteSchema = {
     },
 }
 
-export const UserDeleteRouteSchema = {
+export const UserDeleteDocSchema = {
     schema: {
         tags: ["Users"],
         description: "Delete user by ID",

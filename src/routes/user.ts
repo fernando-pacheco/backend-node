@@ -1,11 +1,11 @@
 import { FabricRoute } from "../utils/fabric-route"
 import {
-    UserGetRouteSchema,
-    UserCreateRouteSchema,
-    UserListRouteSchema,
-    UserDeleteRouteSchema,
-    UserPutRouteSchema,
-} from "./schemas/user"
+    UserGetDocSchema,
+    UserCreateDocSchema,
+    UserListDocSchema,
+    UserDeleteDocSchema,
+    UserPutDocSchema,
+} from "../docs/user"
 import {
     UserCreateResource,
     UserDeleteResource,
@@ -20,7 +20,7 @@ export function UserListRoutes(app: FastifyTypedInstance) {
         app,
         endpoint: "/users",
         method: "get",
-        docs: UserListRouteSchema,
+        docs: UserListDocSchema,
         resource: UserListResource,
     })
 
@@ -28,7 +28,7 @@ export function UserListRoutes(app: FastifyTypedInstance) {
         app,
         endpoint: "/users",
         method: "post",
-        docs: UserCreateRouteSchema,
+        docs: UserCreateDocSchema,
         resource: UserCreateResource,
     })
 }
@@ -38,7 +38,7 @@ export function UserRoutes(app: FastifyTypedInstance) {
         app,
         endpoint: "/users/:id",
         method: "get",
-        docs: UserGetRouteSchema,
+        docs: UserGetDocSchema,
         resource: UserGetResource,
     })
 
@@ -46,7 +46,7 @@ export function UserRoutes(app: FastifyTypedInstance) {
         app,
         endpoint: "/users/:id",
         method: "put",
-        docs: UserPutRouteSchema,
+        docs: UserPutDocSchema,
         resource: UserPutResource,
     })
 
@@ -54,7 +54,7 @@ export function UserRoutes(app: FastifyTypedInstance) {
         app,
         endpoint: "/users/:id",
         method: "delete",
-        docs: UserDeleteRouteSchema,
+        docs: UserDeleteDocSchema,
         resource: UserDeleteResource,
     })
 }
