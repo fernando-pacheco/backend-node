@@ -11,7 +11,7 @@ on:
       - qa
 
 env:
-  IMAGE_NAME: ${{ github.repository }}:${{ github.job_workflow_sha }}
+  IMAGE_NAME: ${{ github.repository }}:${{ github.sha }}
 
 jobs:
   build:
