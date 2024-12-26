@@ -19,8 +19,6 @@ env:
 jobs:
   build:
     runs-on: qa-fpx-server
-    outputs:
-      image: ${{ steps.build.outputs.image }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,7 +27,7 @@ jobs:
         run: |
           echo "Buildando a imagem..."
           export REPO_REF=$(echo $REPO_NAME | cut -d'/' -f2)
-          export IMAGE=$REPO_REF:${COMMIT_HASH:0:8}
+          export IMAGE=$REPO_REF:${COMMIT_HASH:0:7}
           echo "Realizando o build da imagem $IMAGE"
           docker build -t $IMAGE .
         env:
