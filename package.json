@@ -4,9 +4,10 @@
     "main": "index.js",
     "scripts": {
         "dev": "tsx watch src/server.ts",
-        "build": "exec tsc && pnpm copy-prisma && pnpm exec prisma generate",
+        "build": "exec tsc",
         "test": "jest --coverage --coverageThreshold",
         "copy-prisma": "cp -R prisma dist/",
+        "generate": "prisma generate",
         "start": "node dist/server.js"
     },
     "repository": {

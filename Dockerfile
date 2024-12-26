@@ -13,6 +13,8 @@ RUN pnpm install
 COPY . .
 
 RUN pnpm build
+RUN pnpm copy-prisma
+RUN pnpm generate
 
 EXPOSE 3333
 
