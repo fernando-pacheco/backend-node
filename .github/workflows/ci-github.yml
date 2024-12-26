@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - qa
-  pull_request:
-    branches:
-      - qa
       - main
 
 env:
@@ -19,7 +16,7 @@ env:
 
 jobs:
   build:
-    runs-on: qa-fpx-server
+    runs-on: ${{ vars.SERVER_RUNS }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -28,7 +25,7 @@ jobs:
         run: |
           echo "Buildando a imagem..."
           REPO_REF=$(echo $REPO_NAME | cut -d'/' -f2)
-          IMAGE=${{ env.NODE_ENV }}-$REPO_REF:${COMMIT_HASH:0:7}
+          IMAGE=$NODE_ENV-$REPO_REF:${COMMIT_HASH:0:7}
           echo "Realizando o build da imagem $IMAGE"
           docker build -t $IMAGE .
           
@@ -42,7 +39,7 @@ jobs:
           path: image.txt
 
   test:
-    runs-on: qa-fpx-server
+    runs-on: ${{ vars.SERVER_RUNS }}
     needs: build
     steps:
       - name: Download image artifact
@@ -58,7 +55,8 @@ jobs:
           docker run --rm $IMAGE pnpm test
 
   deploy:
-    runs-on: qa-fpx-server
+    runs-on: ${{ vars.SERVER_RUNS }}
+    environment: ${{ github.ref }}
     needs: test
     steps:
       - name: Download image artifact
