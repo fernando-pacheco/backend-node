@@ -1,22 +1,16 @@
 import { PrismaClient } from "@prisma/client"
+import { UserProps } from "../interfaces/user"
 
 const prisma = new PrismaClient()
 
-interface User {
-    id: string
-    name: string
-    email: string
-    created_at: Date
-}
-
 const UserModel = prisma.user
 
-export async function getUsers(): Promise<User[]> {
+export async function getUsers(): Promise<UserProps[]> {
     const users = await UserModel.findMany()
     return users
 }
 
-export async function createUser(body: User): Promise<User> {
+export async function createUser(body: UserProps): Promise<UserProps> {
     const user = await UserModel.create({
         data: {
             name: body.name,
@@ -27,7 +21,10 @@ export async function createUser(body: User): Promise<User> {
     return user
 }
 
-export async function updateUser(id: string, body: User): Promise<User> {
+export async function updateUser(
+    id: string,
+    body: UserProps
+): Promise<UserProps> {
     const user = await UserModel.update({
         where: { id },
         data: {
@@ -39,15 +36,9 @@ export async function updateUser(id: string, body: User): Promise<User> {
     return user
 }
 
-export async function getUserByID(id: string): Promise<User | null> {
+export async function getUserByID(id: string): Promise<UserProps | null> {
     const user = await UserModel.findUnique({
         where: { id },
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            created_at: true,
-        },
     })
 
     return user

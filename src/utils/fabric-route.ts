@@ -1,17 +1,4 @@
-import {
-    FastifyInstance,
-    RouteShorthandOptions,
-    RouteHandlerMethod,
-} from "fastify"
-import { FastifyTypedInstance } from "../types"
-
-interface RouteProps {
-    app: FastifyTypedInstance
-    endpoint: string
-    method: "get" | "post" | "put" | "delete"
-    docs: RouteShorthandOptions
-    resource: RouteHandlerMethod
-}
+import { FabricRouteProps } from "../interfaces/fabric-route"
 
 export function FabricRoute({
     app,
@@ -19,6 +6,6 @@ export function FabricRoute({
     method,
     docs,
     resource,
-}: RouteProps) {
+}: FabricRouteProps) {
     app[method](endpoint, docs, resource)
 }
