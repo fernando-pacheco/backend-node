@@ -9,7 +9,7 @@ on:
       - qa
 
 env:
-  IMAGE_NAME: ${{ github.repository_id }}:${{ github.sha }}
+  IMAGE_NAME: ${{ github.repository }}:${{ github.sha }}
   API_PORT: ${{ secrets.API_PORT }}
   API_URL: ${{ secrets.API_URL }}
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
