@@ -32,7 +32,6 @@ jobs:
           echo "Realizando o build da imagem $IMAGE"
           docker build -t $IMAGE .
           
-          # Salvando a imagem em um arquivo
           echo $IMAGE > image.txt
           echo "Imagem salva em image.txt"
 
@@ -40,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: image
-          path: image.txt  # Upload do arquivo contendo o valor da imagem
+          path: image.txt
 
   test:
     runs-on: qa-fpx-server
@@ -56,7 +55,6 @@ jobs:
           IMAGE=$(cat image.txt)
           echo "Rodando os testes com Jest. Aguarde..."
           echo "Executando os testes na imagem $IMAGE"
-          echo "Executando comando 'docker run --rm $IMAGE pnpm test'"
           docker run --rm $IMAGE pnpm test
 
   deploy:
@@ -70,7 +68,7 @@ jobs:
 
       - name: Deploy application
         run: |
-          IMAGE=$(cat image.txt)
+          export IMAGE=$(cat image.txt)
           echo "Efetuando deploy da aplicação..."
           echo "Imagem atual: $IMAGE"
           docker compose down --remove-orphans
