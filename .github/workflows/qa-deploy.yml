@@ -45,7 +45,7 @@ jobs:
           docker build -t $IMAGE .
 
       - name: Verify Docker image
-        run: docker images | grep "${{ github.repository }}:${{ github.sha }}"
+        run: docker images | grep $IMAGE
 
   push:
     runs-on: ubuntu-latest
@@ -116,4 +116,3 @@ jobs:
             docker compose -f docker-compose.yml up -d
           EOF
 
-          
