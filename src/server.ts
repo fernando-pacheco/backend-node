@@ -11,6 +11,7 @@ import { fastifySwaggerUi } from "@fastify/swagger-ui"
 import { routes } from "./routes"
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
+const AMB = process.env.NODE_ENV === "qa" ? "Homologação" : "Produção"
 
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
@@ -18,7 +19,7 @@ app.setSerializerCompiler(serializerCompiler)
 app.register(fastifySwagger, {
     openapi: {
         info: {
-            title: "TypedAPI - Homologação",
+            title: `TypedAPI - ${AMB}`,
             version: "1.0.0",
         },
     },
