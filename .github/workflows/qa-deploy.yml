@@ -9,7 +9,7 @@ on:
       - qa
 
 env:
-  IMAGE_NAME: ${{ github.repository }}:${{ github.sha }}
+  IMAGE: ${{ github.repository }}:${{ github.sha }}
   API_PORT: ${{ secrets.API_PORT }}
   API_URL: ${{ secrets.API_URL }}
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -24,8 +24,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          echo "IMAGE=${{ env.IMAGE_NAME }}"
-          docker build -t ${{ env.IMAGE_NAME }} .    
+          echo "IMAGE=${{ env.IMAGE }}"
+          docker build -t ${{ env.IMAGE }} .    
 
 
   test:
@@ -35,19 +35,16 @@ jobs:
       - name: Run tests
         run: |
           echo "Rodando os testes com Jest. Aguarde..."
-          docker run --rm ${{ env.IMAGE_NAME }} pnpm test
+          docker run --rm ${{ env.IMAGE }} pnpm test
 
           
   deploy:
     runs-on: qa-fpx-server
     needs: test
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
       - name: Deploy application
         run: |
           echo "Efetuando deploy da aplicação..."
-          echo "Imagem atual: $IMAGE"
+          echo "Imagem atual: ${{ env.IMAGE }}"
           docker compose down --remove-orphans
           docker compose up -d
