@@ -11,14 +11,14 @@ payment_id fk
 user_id fk
 carts_id fk
 
-`Cart`
+`ItemCart`
 id cuid
 product_id fk
 amout int
 
-`Carts`
+`Cart`
 id cuid
-carts Cart[]
+cart ItemCart[]
 
 `Product`
 id cuid
