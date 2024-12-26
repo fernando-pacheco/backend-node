@@ -10,7 +10,7 @@ on:
 
 env:
   COMMIT_HASH: ${{ github.sha }}
-  IMAGE: ${{ github.repository }}:${COMMIT_HASH:0:8}
+  REF_REPO: ${{ github.repository }}
   API_PORT: ${{ secrets.API_PORT }}
   API_URL: ${{ secrets.API_URL }}
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -25,8 +25,10 @@ jobs:
 
       - name: Build Docker image
         run: |
-          echo "IMAGE=${{ env.IMAGE }}"
-          docker build -t ${{ env.IMAGE }} .    
+          echo "REF_REPO=${{ env.REF_REPO }}"
+          echo "COMMIT_HASH=${{ env.COMMIT_HASH }}"
+          export IMAGE=$REF_REPO:${COMMIT_HASH:0:8}
+          docker build -t $IMAGE .    
 
 
   test:
@@ -36,7 +38,7 @@ jobs:
       - name: Run tests
         run: |
           echo "Rodando os testes com Jest. Aguarde..."
-          docker run --rm ${{ env.IMAGE }} pnpm test
+          docker run --rm $IMAGE pnpm test
 
           
   deploy:
@@ -46,6 +48,6 @@ jobs:
       - name: Deploy application
         run: |
           echo "Efetuando deploy da aplicação..."
-          echo "Imagem atual: ${{ env.IMAGE }}"
+          echo "Imagem atual: $IMAGE"
           docker compose down --remove-orphans
           docker compose up -d
