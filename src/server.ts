@@ -18,7 +18,7 @@ app.setSerializerCompiler(serializerCompiler)
 app.register(fastifySwagger, {
     openapi: {
         info: {
-            title: "TypedAPI",
+            title: "TypedAPI - Homologação",
             version: "1.0.0",
         },
     },
