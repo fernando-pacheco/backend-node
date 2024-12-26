@@ -39,12 +39,6 @@ export async function updateUser(
 export async function getUserByID(id: string): Promise<UserProps | null> {
     const user = await UserModel.findUnique({
         where: { id },
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            created_at: true,
-        },
     })
 
     return user
