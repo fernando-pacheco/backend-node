@@ -19,6 +19,8 @@ env:
 jobs:
   build:
     runs-on: qa-fpx-server
+    outputs:
+      IMAGE: ${{ steps.build.outputs.image }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
