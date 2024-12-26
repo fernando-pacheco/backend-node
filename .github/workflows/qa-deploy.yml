@@ -3,11 +3,9 @@ name: deploy
 on:
   push:
     branches:
-      - main
       - qa
   pull_request:
     branches:
-      - main
       - qa
 
 env:
@@ -15,26 +13,10 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    outputs:
-      image: ${{ env.IMAGE_NAME }}
+    runs-on: qa-fpx-server
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build project
-        run: pnpm build
 
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
@@ -46,72 +28,33 @@ jobs:
           docker build -t ${{ env.IMAGE_NAME }} .
 
   push:
-    runs-on: ubuntu-latest
+    runs-on: qa-fpx-server
     needs: build
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Push Docker image
-        env:
-          IMAGE: ${{ needs.build.outputs.image }}
         run: |
-          echo "Pushing Docker image: $IMAGE"
-          docker tag $IMAGE $IMAGE
-          docker push $IMAGE
+          echo "Efetuando o push da imagem Docker: ${{ env.IMAGE_NAME }}"
+          docker tag ${{ env.IMAGE_NAME }} ${{ env.IMAGE_NAME }}
+          docker push ${{ env.IMAGE_NAME }}    
+      
 
   test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Run tests with Jest
-        run: pnpm test
-
-      - name: Upload test coverage
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-coverage
-          path: coverage/
-
-  deploy-app:
-    runs-on: ubuntu-latest
+    runs-on: qa-fpx-server
     needs: push
-    environment: ${{ github.ref_name }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Deploy using Docker Compose on Oracle VM
-        env:
-          IMAGE: ${{ env.IMAGE_NAME }}
+      - name: Run tests
         run: |
-          echo "Deploying application to Oracle VM..."
-          echo "Using image: $IMAGE"
+          echo "Rodando os testes com Jest. Aguarde..."
+          docker run --rm ${{ env.IMAGE_NAME }} pnpm test
 
-          # SSH into the Oracle VM and perform the Docker Compose deployment
-          ssh -o StrictHostKeyChecking=no ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} <<EOF
-            cd /path/to/your/project
-            docker compose -f docker-compose.yml down --remove-orphans
-            docker compose -f docker-compose.yml up -d
-          EOF
+  deploy:
+    runs-on: qa-fpx-server
+    needs: test
+    steps:
+      - name: Deploy application
+        run: |
+          echo "Efetuando deploy da aplicação..."
+          IMAGE=${{ env.IMAGE_NAME }}
+          echo "Imagem atual: $IMAGE"
+          docker compose -f ./docker-compose.yml down --remove-orphans
+          docker compose -f ./docker-compose.yml up -d
