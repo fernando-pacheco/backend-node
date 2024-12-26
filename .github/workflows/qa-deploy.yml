@@ -27,11 +27,10 @@ jobs:
 
       - name: Build Docker image
         run: |
-          echo "REPO_NAME=${{ env.REPO_NAME }}"
-          echo "COMMIT_HASH=${{ env.COMMIT_HASH }}"
+          echo "Buildando a imagem..."
           export REPO_REF=$(echo $REPO_NAME | cut -d'/' -f2)
           export IMAGE=$REPO_REF:${COMMIT_HASH:0:8}
-          echo "IMAGE=$IMAGE"
+          echo "Realizando o build da imagem $IMAGE"
           docker build -t $IMAGE .    
 
 
@@ -42,9 +41,9 @@ jobs:
       - name: Run tests
         run: |
           echo "Rodando os testes com Jest. Aguarde..."
-          echo "Executando os testes na imagem $IMAGE"
-          echo "Executando comando 'docker run --rm $IMAGE pnpm test'"
-          docker run --rm $IMAGE pnpm test
+          echo "Executando os testes na imagem ${{ steps.build.outputs.image }}"
+          echo "Executando comando 'docker run --rm ${{ steps.build.outputs.image }} pnpm test'"
+          docker run --rm ${{ steps.build.outputs.image }} pnpm test
 
           
   deploy:
