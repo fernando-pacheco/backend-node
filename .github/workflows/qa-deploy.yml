@@ -40,6 +40,8 @@ jobs:
       - name: Run tests
         run: |
           echo "Rodando os testes com Jest. Aguarde..."
+          echo "Executando os testes na imagem $IMAGE"
+          echo "Executando comando 'docker run --rm $IMAGE pnpm test'"
           docker run --rm $IMAGE pnpm test
 
           
