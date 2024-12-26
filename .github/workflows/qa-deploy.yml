@@ -11,7 +11,7 @@ on:
       - qa
 
 env:
-  IMAGE_NAME: registry.example.com/${{ github.repository }}:${{ github.sha }}
+  IMAGE_NAME: ${{ github.repository }}:${{ github.job_workflow_sha }}
 
 jobs:
   build:
