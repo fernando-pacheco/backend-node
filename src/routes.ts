@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify"
-import { UserListRoutes, UserRoutes } from "./routes/user"
+import { UserHandlerRoutes, UserRegistersRoutes } from "./routes/user"
 
 export async function routes(app: FastifyInstance) {
-    UserListRoutes(app)
-    UserRoutes(app)
+    UserRegistersRoutes(app)
+    UserHandlerRoutes(app)
 }

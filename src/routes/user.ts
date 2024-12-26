@@ -15,7 +15,7 @@ import {
 } from "../resources/user"
 import { FastifyTypedInstance } from "../types"
 
-export function UserListRoutes(app: FastifyTypedInstance) {
+export function UserRegistersRoutes(app: FastifyTypedInstance) {
     FabricRoute({
         app,
         endpoint: "/users",
@@ -33,7 +33,7 @@ export function UserListRoutes(app: FastifyTypedInstance) {
     })
 }
 
-export function UserRoutes(app: FastifyTypedInstance) {
+export function UserHandlerRoutes(app: FastifyTypedInstance) {
     FabricRoute({
         app,
         endpoint: "/users/:id",
