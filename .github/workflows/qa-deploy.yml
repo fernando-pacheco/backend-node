@@ -56,7 +56,6 @@ jobs:
 
       - name: Push Docker image
         run: |
-          IMAGE=${{ needs.build.outputs.image }}
           echo "Pushing Docker image: $IMAGE"
           docker tag $IMAGE registry.example.com/$IMAGE
           docker push registry.example.com/$IMAGE
