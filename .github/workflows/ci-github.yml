@@ -1,4 +1,4 @@
-name: Pipeline para integração em ambientes de Homologação e Produção
+name: Pipeline HML/PROD
 
 on:
   push:
@@ -9,14 +9,16 @@ on:
 env:
   COMMIT_HASH: ${{ github.sha }}
   REPO_NAME: ${{ github.repository }}
-  API_PORT: ${{ secrets.API_PORT }}
-  API_URL: ${{ secrets.API_URL }}
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  NODE_ENV: ${{ secrets.NODE_ENV }}
 
 jobs:
   build:
-    runs-on: ${{ vars.SERVER_RUNS }}
+    runs-on: ${{ github.ref == 'refs/heads/qa' && 'qa-fpx-server' || 'prod-fpx-server' }}
+    environment: ${{ github.ref == 'refs/heads/qa' && 'qa' || 'prod' }}
+    env:
+        API_URL: ${{ secrets.API_URL }}
+        API_PORT: ${{ secrets.API_PORT }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        NODE_ENV: ${{ secrets.NODE_ENV }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -39,7 +41,13 @@ jobs:
           path: image.txt
 
   test:
-    runs-on: ${{ vars.SERVER_RUNS }}
+    runs-on: ${{ github.ref == 'refs/heads/qa' && 'qa-fpx-server' || 'prod-fpx-server' }}
+    environment: ${{ github.ref == 'refs/heads/qa' && 'qa' || 'prod' }}
+    env:
+        API_URL: ${{ secrets.API_URL }}
+        API_PORT: ${{ secrets.API_PORT }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        NODE_ENV: ${{ secrets.NODE_ENV }}
     needs: build
     steps:
       - name: Download image artifact
@@ -55,8 +63,13 @@ jobs:
           docker run --rm $IMAGE pnpm test
 
   deploy:
-    runs-on: ${{ vars.SERVER_RUNS }}
-    environment: ${{ github.ref }}
+    runs-on: ${{ github.ref == 'refs/heads/qa' && 'qa-fpx-server' || 'prod-fpx-server' }}
+    environment: ${{ github.ref == 'refs/heads/qa' && 'qa' || 'prod' }}
+    env:
+        API_URL: ${{ secrets.API_URL }}
+        API_PORT: ${{ secrets.API_PORT }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        NODE_ENV: ${{ secrets.NODE_ENV }}
     needs: test
     steps:
       - name: Download image artifact
