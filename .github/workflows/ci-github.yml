@@ -17,11 +17,10 @@ env:
   API_URL: ${{ secrets.API_URL }}
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
-  SERVER_RUNS: ${{ secrets.SERVER_RUNS }}
 
 jobs:
   build:
-    runs-on: ${{ env.SERVER_RUNS }}
+    runs-on: ${{ vars.SERVER_RUNS }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,7 +47,7 @@ jobs:
           path: image.txt
 
   test:
-    runs-on: ${{ env.SERVER_RUNS }}
+    runs-on: ${{ vars.SERVER_RUNS }}
     needs: build
     steps:
       - name: Download image artifact
@@ -64,7 +63,7 @@ jobs:
           docker run --rm $IMAGE pnpm test
 
   deploy:
-    runs-on: ${{ env.SERVER_RUNS }}
+    runs-on: ${{ vars.SERVER_RUNS }}
     needs: test
     steps:
       - name: Download image artifact
