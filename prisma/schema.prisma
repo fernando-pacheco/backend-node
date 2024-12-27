@@ -28,7 +28,7 @@ model Order {
   id         String  @id @default(cuid())
   payment_id String  @unique
   user_id    String
-  cart_id    String
+  cart_id    String  @unique
   payment    Payment @relation(fields: [payment_id], references: [id])
   user       User    @relation(fields: [user_id], references: [id])
   cart       Cart    @relation(fields: [cart_id], references: [id])
@@ -46,14 +46,14 @@ model ItemCart {
 model Cart {
   id         String     @id @default(cuid())
   items_cart ItemCart[]
-  orders     Order[]
+  order      Order?
 }
 
 model Product {
-  id        String     @id @default(cuid())
-  name      String
-  price     Float
-  item_cart ItemCart[]
+  id         String     @id @default(cuid())
+  name       String
+  price      Float
+  items_cart ItemCart[]
 }
 
 enum PaymentMethod {
