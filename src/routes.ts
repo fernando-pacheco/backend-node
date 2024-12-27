@@ -1,18 +1,12 @@
 import { FastifyInstance } from "fastify"
-import { UserHandlerRoutes, UserRegistersRoutes } from "./routes/user"
-import { PaymentHandlerRoutes, PaymentRegistersRoutes } from "./routes/payment"
-import { ProductHandlerRoutes, ProductRegistersRoutes } from "./routes/product"
+import { ProductRoutes } from "./routes/product"
 
-export async function routes(app: FastifyInstance) {
-    // Users
-    UserRegistersRoutes(app)
-    UserHandlerRoutes(app)
+export class Routes {
+    constructor(private product: ProductRoutes = new ProductRoutes()) {
+        this.product = product
+    }
 
-    // Payments
-    PaymentRegistersRoutes(app)
-    PaymentHandlerRoutes(app)
-
-    // Products
-    ProductRegistersRoutes(app)
-    ProductHandlerRoutes(app)
+    register = async (app: FastifyInstance) => {
+        this.product.registerRoutes(app)
+    }
 }
