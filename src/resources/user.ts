@@ -7,18 +7,26 @@ import {
 } from "../models/user"
 import { UserResponseSchema } from "../schemas/user"
 
-export async function UserListResource() {
-    const users = await getUsers()
-    return users
+export const UserResources = {
+    create: UserCreateResource,
+    list: UsersListResource,
+    get: UserGetResource,
+    update: UserPutResource,
+    delete: UserDeleteResource,
 }
 
-export async function UserCreateResource(request: any, reply: any) {
+async function UserCreateResource(request: any, reply: any) {
     const body = request.body
     const newUser = await createUser(body)
     reply.status(201).send(newUser)
 }
 
-export async function UserGetResource(request: any, reply: any) {
+async function UsersListResource() {
+    const users = await getUsers()
+    return users
+}
+
+async function UserGetResource(request: any, reply: any) {
     const { id } = request.params
     try {
         const user = await getUserByID(id)
@@ -32,7 +40,7 @@ export async function UserGetResource(request: any, reply: any) {
     }
 }
 
-export async function UserPutResource(request: any, reply: any) {
+async function UserPutResource(request: any, reply: any) {
     const { id } = request.params
     const body = request.body
     try {
@@ -55,7 +63,7 @@ export async function UserPutResource(request: any, reply: any) {
     }
 }
 
-export async function UserDeleteResource(request: any, reply: any) {
+async function UserDeleteResource(request: any, reply: any) {
     const { id } = request.params
     try {
         const user = await getUserByID(id)

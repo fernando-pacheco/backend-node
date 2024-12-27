@@ -1,13 +1,18 @@
 import { createPayment, getPaymentByID } from "../models/payment"
 import { PaymentResponseSchema } from "../schemas/payment"
 
-export async function PaymentCreateResource(request: any, reply: any) {
+export const PaymentResources = {
+    create: PaymentCreateResource,
+    get: PaymentGetResource,
+}
+
+async function PaymentCreateResource(request: any, reply: any) {
     const body = request.body
     const newPayment = await createPayment(body)
     reply.status(201).send(newPayment)
 }
 
-export async function PaymentGetResource(request: any, reply: any) {
+async function PaymentGetResource(request: any, reply: any) {
     const { id } = request.params
     try {
         const payment = await getPaymentByID(id)

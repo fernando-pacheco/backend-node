@@ -7,18 +7,26 @@ import {
 } from "../models/product"
 import { ProductResponseSchema } from "../schemas/product"
 
-export async function ProductCreateResource(request: any, reply: any) {
+export const ProductResources = {
+    create: ProductCreateResource,
+    list: ProductsListResource,
+    get: ProductGetResource,
+    update: ProductPutResource,
+    delete: ProductDeleteResource,
+}
+
+async function ProductCreateResource(request: any, reply: any) {
     const body = request.body
     const newProduct = await createProduct(body)
     reply.status(201).send(newProduct)
 }
 
-export async function ProductsListResource() {
+async function ProductsListResource() {
     const products = await getProducts()
     return products
 }
 
-export async function ProductGetResource(request: any, reply: any) {
+async function ProductGetResource(request: any, reply: any) {
     const { id } = request.params
     try {
         const product = await getProductByID(id)
@@ -33,7 +41,7 @@ export async function ProductGetResource(request: any, reply: any) {
     }
 }
 
-export async function ProductPutResource(request: any, reply: any) {
+async function ProductPutResource(request: any, reply: any) {
     const { id } = request.params
     const body = request.body
     try {
@@ -55,7 +63,7 @@ export async function ProductPutResource(request: any, reply: any) {
     }
 }
 
-export async function ProductDeleteResource(request: any, reply: any) {
+async function ProductDeleteResource(request: any, reply: any) {
     const { id } = request.params
     try {
         const product = await getProductByID(id)
