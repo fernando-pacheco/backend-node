@@ -170,4 +170,21 @@ describe("UserDeleteResource", () => {
             message: `User {1} successfully deleted.`,
         })
     })
+
+    it("should return 404 if user to delete is not found", async () => {
+        ;(getUserByID as jest.Mock).mockResolvedValue(null)
+
+        const mockRequest = { params: { id: "1" } }
+        const mockReply = {
+            status: jest.fn().mockReturnThis(),
+            send: jest.fn(),
+        }
+
+        await UserDeleteResource(mockRequest, mockReply)
+
+        expect(mockReply.status).toHaveBeenCalledWith(404)
+        expect(mockReply.send).toHaveBeenCalledWith({
+            message: "User not found.",
+        })
+    })
 })
