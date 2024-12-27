@@ -2,6 +2,7 @@ import { ProductService } from "../service/product"
 import { ProductSchemas } from "../schemas/product"
 import { Resources } from "../interfaces/resources"
 import { Product } from "@prisma/client"
+import { FastifyReply, FastifyRequest } from "fastify"
 
 export class ProductResources extends Resources<Product> {
     constructor(
@@ -11,7 +12,10 @@ export class ProductResources extends Resources<Product> {
         super()
     }
 
-    create = async (request: any, reply: any) => {
+    create = async (
+        request: FastifyRequest<{ Body: Product }>,
+        reply: FastifyReply
+    ) => {
         try {
             const body = request.body
             const newProduct = await this.service.createProduct(body)
@@ -26,7 +30,7 @@ export class ProductResources extends Resources<Product> {
         return products
     }
 
-    get = async (request: any, reply: any) => {
+    get = async (request: FastifyRequest<{ Params: Product }>, reply: any) => {
         const { id } = request.params
         try {
             const product = await this.ensureProductExists(id, reply)
@@ -36,7 +40,10 @@ export class ProductResources extends Resources<Product> {
         }
     }
 
-    update = async (request: any, reply: any) => {
+    update = async (
+        request: FastifyRequest<{ Body: Product; Params: Product }>,
+        reply: any
+    ) => {
         const { id } = request.params
         const body = request.body
         try {
@@ -53,7 +60,10 @@ export class ProductResources extends Resources<Product> {
         }
     }
 
-    delete = async (request: any, reply: any) => {
+    delete = async (
+        request: FastifyRequest<{ Params: Product }>,
+        reply: any
+    ) => {
         const { id } = request.params
         try {
             await this.ensureProductExists(id, reply)
