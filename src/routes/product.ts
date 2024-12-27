@@ -1,48 +1,63 @@
 import { ProductDocsSchemas } from "../docs/product"
+import { Routes } from "../interfaces/routes"
 import { ProductResources } from "../resources/product"
 import { FastifyTypedInstance } from "../types"
 import { FabricRoute } from "../utils/fabric-route"
 
-export function ProductRegistersRoutes(app: FastifyTypedInstance) {
-    FabricRoute({
-        app,
-        endpoint: "/product",
-        method: "post",
-        docs: ProductDocsSchemas.create,
-        resource: ProductResources.create,
-    })
+export class ProductRoutes extends Routes {
+    constructor(
+        private resources: ProductResources = new ProductResources(),
+        private docsSchema: ProductDocsSchemas = new ProductDocsSchemas()
+    ) {
+        super()
+    }
 
-    FabricRoute({
-        app,
-        endpoint: "/product",
-        method: "get",
-        docs: ProductDocsSchemas.list,
-        resource: ProductResources.list,
-    })
-}
+    public registerRoutes(app: FastifyTypedInstance) {
+        this.productRegistersRoutes(app)
+        this.productHandlersRoutes(app)
+    }
 
-export function ProductHandlerRoutes(app: FastifyTypedInstance) {
-    FabricRoute({
-        app,
-        endpoint: "/product/:id",
-        method: "get",
-        docs: ProductDocsSchemas.get,
-        resource: ProductResources.get,
-    })
+    private productRegistersRoutes(app: FastifyTypedInstance) {
+        FabricRoute({
+            app,
+            endpoint: "/product",
+            method: "post",
+            docs: this.docsSchema.create,
+            resource: this.resources.create,
+        })
 
-    FabricRoute({
-        app,
-        endpoint: "/product/:id",
-        method: "put",
-        docs: ProductDocsSchemas.update,
-        resource: ProductResources.update,
-    })
+        FabricRoute({
+            app,
+            endpoint: "/product",
+            method: "get",
+            docs: this.docsSchema.list,
+            resource: this.resources.list,
+        })
+    }
 
-    FabricRoute({
-        app,
-        endpoint: "/product/:id",
-        method: "delete",
-        docs: ProductDocsSchemas.delete,
-        resource: ProductResources.delete,
-    })
+    private productHandlersRoutes(app: FastifyTypedInstance) {
+        FabricRoute({
+            app,
+            endpoint: "/product/:id",
+            method: "get",
+            docs: this.docsSchema.get,
+            resource: this.resources.get,
+        })
+
+        FabricRoute({
+            app,
+            endpoint: "/product/:id",
+            method: "put",
+            docs: this.docsSchema.update,
+            resource: this.resources.update,
+        })
+
+        FabricRoute({
+            app,
+            endpoint: "/product/:id",
+            method: "delete",
+            docs: this.docsSchema.delete,
+            resource: this.resources.delete,
+        })
+    }
 }
