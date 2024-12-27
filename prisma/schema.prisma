@@ -8,18 +8,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum PaymentMethod {
-  PIX
-  CREDIT
-  DEBIT
-  WALLET
-}
-
 model User {
   id         String   @id @default(cuid())
   name       String
   email      String   @unique
   created_at DateTime @default(now())
+  orders     Order[]
 }
 
 model Payment {
@@ -27,10 +21,44 @@ model Payment {
   type           String
   payment_method PaymentMethod
   value          Float
+  order          Order[]
+}
+
+model Order {
+  id         String  @id @default(cuid())
+  payment_id String
+  user_id    String
+  carts_id   String
+  payment    Payment @relation(fields: [payment_id], references: [id])
+  user       User    @relation(fields: [user_id], references: [id])
+  cart       Cart    @relation(fields: [carts_id], references: [id])
+}
+
+model ItemCart {
+  id         String  @id @default(cuid())
+  product_id String
+  amount     Int
+  product    Product @relation(fields: [product_id], references: [id])
+  cart_id    String
+  cart       Cart    @relation(fields: [cart_id], references: [id])
+}
+
+model Cart {
+  id    String     @id @default(cuid())
+  items ItemCart[]
+  Order Order[]
 }
 
 model Product {
-  id    String @id @default(cuid())
+  id    String     @id @default(cuid())
   name  String
   price Float
+  carts ItemCart[]
+}
+
+enum PaymentMethod {
+  PIX
+  CREDIT
+  DEBIT
+  WALLET
 }
