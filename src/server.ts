@@ -1,4 +1,4 @@
-import { fastify } from "fastify"
+import { fastify, FastifyInstance } from "fastify"
 import { fastifyCors } from "@fastify/cors"
 import {
     validatorCompiler,
@@ -8,33 +8,65 @@ import {
 } from "fastify-type-provider-zod"
 import { fastifySwagger } from "@fastify/swagger"
 import { fastifySwaggerUi } from "@fastify/swagger-ui"
-import { routes } from "./routes"
+import { Routes } from "./routes"
 
-const app = fastify().withTypeProvider<ZodTypeProvider>()
-const AMB = process.env.NODE_ENV === "qa" ? "Homologação" : "Produção"
+class Server {
+    private AMB: string
 
-app.setValidatorCompiler(validatorCompiler)
-app.setSerializerCompiler(serializerCompiler)
+    constructor(
+        private app: FastifyInstance = fastify().withTypeProvider<ZodTypeProvider>(),
+        private routes: Routes = new Routes(),
+        private environments: Record<string, string> = {
+            qa: "Homologação",
+            prod: "Produção",
+        }
+    ) {
+        this.app = app
+        this.routes = routes
+        this.AMB = this.environments[process.env.NODE_ENV || "qa"]
 
-app.register(fastifySwagger, {
-    openapi: {
-        info: {
-            title: `TypedAPI - ${AMB}`,
-            version: "1.0.0",
-        },
-    },
-    transform: jsonSchemaTransform,
-})
-app.register(fastifySwaggerUi, {
-    routePrefix: "/api",
-})
-app.register(fastifyCors, { origin: "*" })
+        this.configure()
+        this.registerRoutes()
+    }
 
-app.listen({
-    port: Number(process.env.API_PORT),
-    path: process.env.API_URL,
-}).then(() => {
-    console.log("HTTP server running!")
-})
+    private configure() {
+        this.app.setValidatorCompiler(validatorCompiler)
+        this.app.setSerializerCompiler(serializerCompiler)
 
-app.register(routes)
+        this.app.register(fastifySwagger, {
+            openapi: {
+                info: {
+                    title: `TypedAPI - ${this.AMB}`,
+                    version: "1.0.0",
+                },
+            },
+            transform: jsonSchemaTransform,
+        })
+
+        this.app.register(fastifySwaggerUi, {
+            routePrefix: "/api",
+        })
+
+        this.app.register(fastifyCors, { origin: "*" })
+    }
+
+    private registerRoutes() {
+        this.app.register(this.routes.register)
+    }
+
+    public async start() {
+        try {
+            const port = Number(process.env.API_PORT)
+            const path = process.env.API_URL
+
+            await this.app.listen({ port, path })
+            console.log(`HTTP server running on http://${path}:${port}`)
+        } catch (err) {
+            console.error("Error starting server:", err)
+            process.exit(1)
+        }
+    }
+}
+
+const server = new Server()
+server.start()
