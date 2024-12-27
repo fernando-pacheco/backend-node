@@ -6,67 +6,61 @@ import {
     UserUpdateSchema,
 } from "../schemas/user"
 import { MessageResponseSchema } from "../schemas/message"
+import { MessageResponses } from "../utils/message-responses"
 
-export const UserListDocSchema = {
-    schema: {
-        tags: ["Users"],
-        description: "List users",
-        response: {
-            200: UsersListResponseSchema,
-            500: MessageResponseSchema,
+export const UserDocsSchemas = {
+    create: {
+        schema: {
+            tags: ["Users"],
+            description: "Create a new user",
+            body: UserCreateSchema,
+            response: {
+                201: UserResponseSchema,
+                ...MessageResponses([500]),
+            },
         },
     },
-}
-
-export const UserCreateDocSchema = {
-    schema: {
-        tags: ["Users"],
-        description: "Create a new user",
-        body: UserCreateSchema,
-        response: {
-            201: UserResponseSchema,
-            500: MessageResponseSchema,
+    list: {
+        schema: {
+            tags: ["Users"],
+            description: "List users",
+            response: {
+                200: UsersListResponseSchema,
+                ...MessageResponses([500]),
+            },
         },
     },
-}
-
-export const UserGetDocSchema = {
-    schema: {
-        tags: ["Users"],
-        description: "Get user by ID",
-        params: UserIDParamsSchema,
-        response: {
-            200: UserResponseSchema,
-            404: MessageResponseSchema,
-            500: MessageResponseSchema,
+    get: {
+        schema: {
+            tags: ["Users"],
+            description: "Get user by ID",
+            params: UserIDParamsSchema,
+            response: {
+                200: UserResponseSchema,
+                ...MessageResponses([404, 500]),
+            },
         },
     },
-}
-
-export const UserPutDocSchema = {
-    schema: {
-        tags: ["Users"],
-        description: "Put user, selected by ID",
-        params: UserIDParamsSchema,
-        body: UserUpdateSchema,
-        response: {
-            200: UserResponseSchema,
-            400: MessageResponseSchema,
-            404: MessageResponseSchema,
-            500: MessageResponseSchema,
+    update: {
+        schema: {
+            tags: ["Users"],
+            description: "Put user, selected by ID",
+            params: UserIDParamsSchema,
+            body: UserUpdateSchema,
+            response: {
+                200: UserResponseSchema,
+                ...MessageResponses([400, 404, 500]),
+            },
         },
     },
-}
-
-export const UserDeleteDocSchema = {
-    schema: {
-        tags: ["Users"],
-        description: "Delete user by ID",
-        params: UserIDParamsSchema,
-        response: {
-            200: MessageResponseSchema,
-            404: MessageResponseSchema,
-            500: MessageResponseSchema,
+    delete: {
+        schema: {
+            tags: ["Users"],
+            description: "Delete user by ID",
+            params: UserIDParamsSchema,
+            response: {
+                ...MessageResponses([200, 404, 500]),
+            },
         },
     },
 }

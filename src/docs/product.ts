@@ -58,8 +58,7 @@ export const ProductDocsSchemas = {
             description: "Delete product by ID",
             params: ProductIDParamsSchema,
             response: {
-                200: ProductResponseSchema,
-                ...MessageResponses([400, 404, 500]),
+                ...MessageResponses([200, 404, 500]),
             },
         },
     },
