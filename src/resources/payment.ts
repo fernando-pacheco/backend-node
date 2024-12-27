@@ -1,4 +1,4 @@
-import { createPayment, getPaymentByID } from "../models/payment"
+import { createPayment, getPaymentByID } from "../service/payment"
 import { PaymentResponseSchema } from "../schemas/payment"
 
 export const PaymentResources = {

@@ -4,7 +4,7 @@ import {
     getUserByID,
     getUsers,
     updateUser,
-} from "../models/user"
+} from "../service/user"
 import { UserResponseSchema } from "../schemas/user"
 
 export const UserResources = {
