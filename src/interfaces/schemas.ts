@@ -1,9 +1,9 @@
-import { z, ZodArray } from "zod"
+import { z, ZodObject } from "zod"
 
 export abstract class Schemas {
-    abstract get response(): object
-    abstract listResponse?: ZodArray<any>
-    abstract get create(): object
-    abstract get update(): object
-    abstract get idParams(): object
+    abstract get response(): ZodObject<any>
+    abstract listResponse?: ZodObject<any>[]
+    abstract get create(): ZodObject<any>
+    abstract get update(): ZodObject<any>
+    abstract get idParams(): ZodObject<any>
 }
