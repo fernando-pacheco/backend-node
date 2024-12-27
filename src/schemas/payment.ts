@@ -1,42 +1,45 @@
 import { PaymentMethod } from "@prisma/client"
 import { z } from "zod"
+import { Schemas } from "../interfaces/schemas"
 
-export const PaymentResponseSchema = z.object({
-    id: z.string(),
-    type: z.string(),
-    payment_method: z.enum([
-        PaymentMethod.PIX,
-        PaymentMethod.CREDIT,
-        PaymentMethod.DEBIT,
-        PaymentMethod.WALLET,
-    ]),
-    value: z.number(),
-})
-
-export const PaymentCreateSchema = z.object({
-    type: z.string(),
-    payment_method: z.enum([
-        PaymentMethod.PIX,
-        PaymentMethod.CREDIT,
-        PaymentMethod.DEBIT,
-        PaymentMethod.WALLET,
-    ]),
-    value: z.number(),
-})
-
-export const PaymentUpdateSchema = z.object({
-    type: z.string().optional(),
-    payment_method: z
-        .enum([
+export class PaymentSchemas extends Schemas {
+    public readonly response = z.object({
+        id: z.string(),
+        type: z.string(),
+        payment_method: z.enum([
             PaymentMethod.PIX,
             PaymentMethod.CREDIT,
             PaymentMethod.DEBIT,
             PaymentMethod.WALLET,
-        ])
-        .optional(),
-    value: z.number().optional(),
-})
+        ]),
+        value: z.number(),
+    })
 
-export const PaymentIDParamsSchema = z.object({
-    id: z.string().min(1, "Payment ID is required"),
-})
+    public readonly create = z.object({
+        type: z.string(),
+        payment_method: z.enum([
+            PaymentMethod.PIX,
+            PaymentMethod.CREDIT,
+            PaymentMethod.DEBIT,
+            PaymentMethod.WALLET,
+        ]),
+        value: z.number(),
+    })
+
+    public readonly update = z.object({
+        type: z.string().optional(),
+        payment_method: z
+            .enum([
+                PaymentMethod.PIX,
+                PaymentMethod.CREDIT,
+                PaymentMethod.DEBIT,
+                PaymentMethod.WALLET,
+            ])
+            .optional(),
+        value: z.number().optional(),
+    })
+
+    public readonly idParams = z.object({
+        id: z.string().min(1, "Payment ID is required"),
+    })
+}
