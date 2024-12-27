@@ -1,11 +1,5 @@
 import { ProductDocsSchemas } from "../docs/product"
-import {
-    ProductCreateResource,
-    ProductDeleteResource,
-    ProductGetResource,
-    ProductPutResource,
-    ProductsListResource,
-} from "../resources/product"
+import { ProductResources } from "../resources/product"
 import { FastifyTypedInstance } from "../types"
 import { FabricRoute } from "../utils/fabric-route"
 
@@ -15,7 +9,7 @@ export function ProductRegistersRoutes(app: FastifyTypedInstance) {
         endpoint: "/product",
         method: "post",
         docs: ProductDocsSchemas.create,
-        resource: ProductCreateResource,
+        resource: ProductResources.create,
     })
 
     FabricRoute({
@@ -23,7 +17,7 @@ export function ProductRegistersRoutes(app: FastifyTypedInstance) {
         endpoint: "/product",
         method: "get",
         docs: ProductDocsSchemas.list,
-        resource: ProductsListResource,
+        resource: ProductResources.list,
     })
 }
 
@@ -33,7 +27,7 @@ export function ProductHandlerRoutes(app: FastifyTypedInstance) {
         endpoint: "/product/:id",
         method: "get",
         docs: ProductDocsSchemas.get,
-        resource: ProductGetResource,
+        resource: ProductResources.get,
     })
 
     FabricRoute({
@@ -41,7 +35,7 @@ export function ProductHandlerRoutes(app: FastifyTypedInstance) {
         endpoint: "/product/:id",
         method: "put",
         docs: ProductDocsSchemas.update,
-        resource: ProductPutResource,
+        resource: ProductResources.update,
     })
 
     FabricRoute({
@@ -49,6 +43,6 @@ export function ProductHandlerRoutes(app: FastifyTypedInstance) {
         endpoint: "/product/:id",
         method: "delete",
         docs: ProductDocsSchemas.delete,
-        resource: ProductDeleteResource,
+        resource: ProductResources.delete,
     })
 }

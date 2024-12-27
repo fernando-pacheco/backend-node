@@ -1,5 +1,5 @@
-import { PaymentCreateDocSchema, PaymentGetDocSchema } from "../docs/payment"
-import { PaymentCreateResource, PaymentGetResource } from "../resources/payment"
+import { PaymentDocSchemas } from "../docs/payment"
+import { PaymentResources } from "../resources/payment"
 import { FastifyTypedInstance } from "../types"
 import { FabricRoute } from "../utils/fabric-route"
 
@@ -8,8 +8,8 @@ export function PaymentRegistersRoutes(app: FastifyTypedInstance) {
         app,
         endpoint: "/payment",
         method: "post",
-        docs: PaymentCreateDocSchema,
-        resource: PaymentCreateResource,
+        docs: PaymentDocSchemas.create,
+        resource: PaymentResources.create,
     })
 }
 
@@ -18,7 +18,7 @@ export function PaymentHandlerRoutes(app: FastifyTypedInstance) {
         app,
         endpoint: "/payment/:id",
         method: "get",
-        docs: PaymentGetDocSchema,
-        resource: PaymentGetResource,
+        docs: PaymentDocSchemas.get,
+        resource: PaymentResources.get,
     })
 }
