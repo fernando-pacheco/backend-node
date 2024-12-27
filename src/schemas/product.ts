@@ -1,6 +1,7 @@
 import { z } from "zod"
+import { Schemas } from "../interfaces/schemas"
 
-export class ProductSchemas {
+export class ProductSchemas extends Schemas {
     public readonly response = z.object({
         id: z.string(),
         name: z.string(),
