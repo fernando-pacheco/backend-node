@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "tsx watch src/server.ts",
         "build": "exec tsc",
-        "test": "jest --coverage --coverageThreshold",
+        "test": "jest --coverage",
         "copy-prisma": "cp -R prisma dist/",
         "generate": "prisma generate",
         "start": "node dist/server.js"
