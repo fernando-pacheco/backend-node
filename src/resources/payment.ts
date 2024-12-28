@@ -1,4 +1,4 @@
-import { PaymentServices } from "../service/payment"
+import { PaymentServices } from "../services/payment"
 import { PaymentSchemas } from "../schemas/payment"
 import { Payment } from "@prisma/client"
 import { FastifyReply, FastifyRequest } from "fastify"

@@ -1,4 +1,4 @@
-import { UserServices } from "../service/user"
+import { UserServices } from "../services/user"
 import { UserSchemas } from "../schemas/user"
 import { Resources } from "../interfaces/resources"
 import { User } from "@prisma/client"

@@ -1,4 +1,4 @@
-import { ProductServices } from "../service/product"
+import { ProductServices } from "../services/product"
 import { ProductSchemas } from "../schemas/product"
 import { Product } from "@prisma/client"
 import { FastifyReply, FastifyRequest } from "fastify"
