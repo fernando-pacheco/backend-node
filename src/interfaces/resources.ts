@@ -6,11 +6,6 @@ export abstract class Resources<T> {
         reply: FastifyReply
     ): Promise<void>
 
-    public abstract list(
-        request: FastifyRequest,
-        reply: FastifyReply
-    ): Promise<T[]>
-
     public abstract get(
         request: FastifyRequest,
         reply: FastifyReply
