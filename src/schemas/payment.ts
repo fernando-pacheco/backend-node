@@ -23,7 +23,7 @@ export class PaymentSchemas extends Schemas {
             PaymentMethod.DEBIT,
             PaymentMethod.WALLET,
         ]),
-        value: z.number(),
+        value: z.number().min(0),
     })
 
     public readonly update = z.object({
@@ -36,7 +36,7 @@ export class PaymentSchemas extends Schemas {
                 PaymentMethod.WALLET,
             ])
             .optional(),
-        value: z.number().optional(),
+        value: z.number().min(0).optional(),
     })
 
     public readonly idParams = z.object({
