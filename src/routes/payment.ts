@@ -1,24 +1,40 @@
-import { PaymentDocSchemas } from "../docs/payment"
+import { RouteHandlerMethod } from "fastify"
+import { PaymentDocsSchemas } from "../docs/payment"
+import { Routes } from "../interfaces/routes"
 import { PaymentResources } from "../resources/payment"
 import { FastifyTypedInstance } from "../types"
 import { FabricRoute } from "../utils/fabric-route"
 
-export function PaymentRegistersRoutes(app: FastifyTypedInstance) {
-    FabricRoute({
-        app,
-        endpoint: "/payment",
-        method: "post",
-        docs: PaymentDocSchemas.create,
-        resource: PaymentResources.create,
-    })
-}
+export class PaymentRoutes extends Routes {
+    constructor(
+        private resource: PaymentResources = new PaymentResources(),
+        private docsSchema: PaymentDocsSchemas = new PaymentDocsSchemas()
+    ) {
+        super()
+    }
 
-export function PaymentHandlerRoutes(app: FastifyTypedInstance) {
-    FabricRoute({
-        app,
-        endpoint: "/payment/:id",
-        method: "get",
-        docs: PaymentDocSchemas.get,
-        resource: PaymentResources.get,
-    })
+    public registerRoutes(app: FastifyTypedInstance) {
+        this.paymentRegistersRoutes(app)
+        this.paymentHandlerRoutes(app)
+    }
+
+    private paymentRegistersRoutes(app: FastifyTypedInstance) {
+        FabricRoute({
+            app,
+            endpoint: "/payment",
+            method: "post",
+            docs: this.docsSchema.create,
+            resource: this.resource.create as RouteHandlerMethod,
+        })
+    }
+
+    private paymentHandlerRoutes(app: FastifyTypedInstance) {
+        FabricRoute({
+            app,
+            endpoint: "/payment/:id",
+            method: "get",
+            docs: this.docsSchema.get,
+            resource: this.resource.get as RouteHandlerMethod,
+        })
+    }
 }
