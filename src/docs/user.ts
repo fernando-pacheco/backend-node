@@ -1,66 +1,78 @@
-import {
-    UserCreateSchema,
-    UserIDParamsSchema,
-    UserResponseSchema,
-    UsersListResponseSchema,
-    UserUpdateSchema,
-} from "../schemas/user"
-import { MessageResponseSchema } from "../schemas/message"
+import { DocsSchemas } from "../interfaces/docs-schemas"
+import { UserSchemas } from "../schemas/user"
 import { MessageResponses } from "../utils/message-responses"
 
-export const UserDocsSchemas = {
-    create: {
-        schema: {
-            tags: ["Users"],
-            description: "Create a new user",
-            body: UserCreateSchema,
-            response: {
-                201: UserResponseSchema,
-                ...MessageResponses([500]),
+export class UserDocsSchemas extends DocsSchemas {
+    constructor(private schema: UserSchemas = new UserSchemas()) {
+        super()
+    }
+
+    public get create() {
+        return {
+            schema: {
+                tags: ["Users"],
+                description: "Create a new user",
+                body: this.schema.create,
+                response: {
+                    201: this.schema.response,
+                    ...MessageResponses([400, 500]),
+                },
             },
-        },
-    },
-    list: {
-        schema: {
-            tags: ["Users"],
-            description: "List users",
-            response: {
-                200: UsersListResponseSchema,
-                ...MessageResponses([500]),
+        }
+    }
+
+    public get list() {
+        return {
+            schema: {
+                tags: ["Users"],
+                description: "List users",
+                responses: {
+                    200: this.schema.listResponse,
+                    ...MessageResponses([500]),
+                },
             },
-        },
-    },
-    get: {
-        schema: {
-            tags: ["Users"],
-            description: "Get user by ID",
-            params: UserIDParamsSchema,
-            response: {
-                200: UserResponseSchema,
-                ...MessageResponses([404, 500]),
+        }
+    }
+
+    public get get() {
+        return {
+            schema: {
+                tags: ["Users"],
+                description: "Get user by ID",
+                params: this.schema.idParams,
+                response: {
+                    200: this.schema.response,
+                    ...MessageResponses([400, 404, 500]),
+                },
             },
-        },
-    },
-    update: {
-        schema: {
-            tags: ["Users"],
-            description: "Put user, selected by ID",
-            params: UserIDParamsSchema,
-            body: UserUpdateSchema,
-            response: {
-                200: UserResponseSchema,
-                ...MessageResponses([400, 404, 500]),
+        }
+    }
+
+    public get update() {
+        return {
+            schema: {
+                tags: ["Users"],
+                description: "Update user by ID",
+                params: this.schema.idParams,
+                body: this.schema.update,
+                response: {
+                    200: this.schema.response,
+                    ...MessageResponses([400, 404, 500]),
+                },
             },
-        },
-    },
-    delete: {
-        schema: {
-            tags: ["Users"],
-            description: "Delete user by ID",
-            params: UserIDParamsSchema,
-            response: {
-                ...MessageResponses([200, 404, 500]),
+        }
+    }
+
+    public get delete() {
+        return {
+            schema: {
+                tags: ["Users"],
+                description: "Delete user by ID",
+                params: this.schema.idParams,
+                response: {
+                    ...MessageResponses([200, 400, 404, 500]),
+                },
             },
-        },
-    },
+        }
+    }
 }

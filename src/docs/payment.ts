@@ -1,32 +1,37 @@
-import { MessageResponseSchema } from "../schemas/message"
-import {
-    PaymentCreateSchema,
-    PaymentIDParamsSchema,
-    PaymentResponseSchema,
-} from "../schemas/payment"
+import { DocsSchemas } from "../interfaces/docs-schemas"
+import { PaymentSchemas } from "../schemas/payment"
 import { MessageResponses } from "../utils/message-responses"
 
-export const PaymentDocSchemas = {
-    create: {
-        schema: {
-            tags: ["Payments"],
-            description: "Create a payment method",
-            body: PaymentCreateSchema,
-            response: {
-                201: PaymentResponseSchema,
-                ...MessageResponses([400, 500]),
+export class PaymentDocsSchemas extends DocsSchemas {
+    constructor(private schema: PaymentSchemas = new PaymentSchemas()) {
+        super()
+    }
+
+    public get create() {
+        return {
+            schema: {
+                tags: ["Payments"],
+                description: "Create a payment method",
+                body: this.schema.create,
+                response: {
+                    201: this.schema.response,
+                    ...MessageResponses([400, 500]),
+                },
             },
-        },
-    },
-    get: {
-        schema: {
-            tags: ["Payments"],
-            description: "Get payment method by ID",
-            params: PaymentIDParamsSchema,
-            response: {
-                200: PaymentResponseSchema,
-                ...MessageResponses([404, 500]),
+        }
+    }
+
+    public get get() {
+        return {
+            schema: {
+                tags: ["Payments"],
+                description: "Get payment method by ID",
+                params: this.schema.idParams,
+                response: {
+                    200: this.schema.response,
+                    ...MessageResponses([400, 404, 500]),
+                },
             },
-        },
-    },
+        }
+    }
 }
