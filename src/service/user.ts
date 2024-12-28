@@ -1,51 +1,52 @@
-import { PrismaClient } from "@prisma/client"
-import { UserProps } from "../interfaces/user"
+import { PrismaClient, User } from "@prisma/client"
 
-const prisma = new PrismaClient()
+export class UserServices {
+    private UserModel: PrismaClient["user"]
 
-const UserModel = prisma.user
+    constructor(private prisma: PrismaClient = new PrismaClient()) {
+        this.prisma = prisma
+        this.UserModel = this.prisma.user
+    }
 
-export async function createUser(body: UserProps): Promise<UserProps> {
-    const user = await UserModel.create({
-        data: {
-            name: body.name,
-            email: body.email,
-        },
-    })
+    async createUser(body: User): Promise<User> {
+        const user = await this.UserModel.create({
+            data: {
+                name: body.name,
+                email: body.email,
+            },
+        })
 
-    return user
-}
+        return user
+    }
 
-export async function getUsers(): Promise<UserProps[]> {
-    const users = await UserModel.findMany()
-    return users
-}
+    async getUsers(): Promise<User[]> {
+        const users = await this.UserModel.findMany()
+        return users
+    }
 
-export async function getUserByID(id: string): Promise<UserProps | null> {
-    const user = await UserModel.findUnique({
-        where: { id },
-    })
+    async getUserByID(id: string): Promise<User | null> {
+        const user = await this.UserModel.findUnique({
+            where: { id },
+        })
 
-    return user
-}
+        return user
+    }
 
-export async function updateUser(
-    id: string,
-    body: UserProps
-): Promise<UserProps> {
-    const user = await UserModel.update({
-        where: { id },
-        data: {
-            name: body.name,
-            email: body.email,
-        },
-    })
+    async updateUser(id: string, body: User): Promise<User> {
+        const user = await this.UserModel.update({
+            where: { id },
+            data: {
+                name: body.name,
+                email: body.email,
+            },
+        })
 
-    return user
-}
+        return user
+    }
 
-export async function deleteUserByID(id: string) {
-    await UserModel.delete({
-        where: { id },
-    })
+    async deleteUserByID(id: string): Promise<void> {
+        await this.UserModel.delete({
+            where: { id },
+        })
+    }
 }

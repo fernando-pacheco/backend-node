@@ -1,31 +1,32 @@
-import { PrismaClient } from "@prisma/client"
-import { PaymentProps } from "../interfaces/payment"
+import { PrismaClient, Payment } from "@prisma/client"
 
-const prisma = new PrismaClient()
-const PaymentModel = prisma.payment
+export class PaymentServices {
+    private PaymentModel: PrismaClient["payment"]
 
-export async function createPayment(body: PaymentProps): Promise<PaymentProps> {
-    const payment = await PaymentModel.create({
-        data: {
-            type: body.type,
-            payment_method: body.payment_method,
-            value: body.value,
-        },
-    })
+    constructor(private prisma: PrismaClient = new PrismaClient()) {
+        this.prisma = prisma
+        this.PaymentModel = this.prisma.payment
+    }
 
-    return payment
-}
+    async createPayment(body: Payment): Promise<Payment> {
+        const payment = await this.PaymentModel.create({
+            data: {
+                type: body.type,
+                payment_method: body.payment_method,
+                value: body.value,
+            },
+        })
+        return payment
+    }
 
-export async function getPaymentByID(id: string): Promise<PaymentProps | null> {
-    const payment = await PaymentModel.findUnique({
-        where: { id },
-    })
+    async getPaymentByID(id: string): Promise<Payment | null> {
+        const payment = await this.PaymentModel.findUnique({
+            where: { id },
+        })
+        return payment
+    }
 
-    return payment
-}
-
-export async function getPaymentByOrderID(
-    order_id: string
-): Promise<PaymentProps | null> {
-    return null
+    async getPaymentByOrderID(order_id: string): Promise<Payment | null> {
+        return null
+    }
 }
