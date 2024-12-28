@@ -1,6 +1,6 @@
 import { PrismaClient, Product } from "@prisma/client"
 
-export class ProductService {
+export class ProductServices {
     private ProductModel: PrismaClient["product"]
 
     constructor(private prisma: PrismaClient = new PrismaClient()) {

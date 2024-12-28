@@ -7,7 +7,7 @@ import { FabricRoute } from "../utils/fabric-route"
 
 export class ProductRoutes extends Routes {
     constructor(
-        private resources: ProductResources = new ProductResources(),
+        private resource: ProductResources = new ProductResources(),
         private docsSchema: ProductDocsSchemas = new ProductDocsSchemas()
     ) {
         super()
@@ -24,7 +24,7 @@ export class ProductRoutes extends Routes {
             endpoint: "/product",
             method: "post",
             docs: this.docsSchema.create,
-            resource: this.resources.create as RouteHandlerMethod,
+            resource: this.resource.create as RouteHandlerMethod,
         })
 
         FabricRoute({
@@ -32,7 +32,7 @@ export class ProductRoutes extends Routes {
             endpoint: "/product",
             method: "get",
             docs: this.docsSchema.list,
-            resource: this.resources.list,
+            resource: this.resource.list,
         })
     }
 
@@ -42,7 +42,7 @@ export class ProductRoutes extends Routes {
             endpoint: "/product/:id",
             method: "get",
             docs: this.docsSchema.get,
-            resource: this.resources.get as RouteHandlerMethod,
+            resource: this.resource.get as RouteHandlerMethod,
         })
 
         FabricRoute({
@@ -50,7 +50,7 @@ export class ProductRoutes extends Routes {
             endpoint: "/product/:id",
             method: "put",
             docs: this.docsSchema.update,
-            resource: this.resources.update as RouteHandlerMethod,
+            resource: this.resource.update as RouteHandlerMethod,
         })
 
         FabricRoute({
@@ -58,7 +58,7 @@ export class ProductRoutes extends Routes {
             endpoint: "/product/:id",
             method: "delete",
             docs: this.docsSchema.delete,
-            resource: this.resources.delete as RouteHandlerMethod,
+            resource: this.resource.delete as RouteHandlerMethod,
         })
     }
 }

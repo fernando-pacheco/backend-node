@@ -1,12 +1,12 @@
-import { ProductService } from "../service/product"
+import { ProductServices } from "../service/product"
 import { ProductSchemas } from "../schemas/product"
-import { Resources } from "../interfaces/resources"
 import { Product } from "@prisma/client"
 import { FastifyReply, FastifyRequest } from "fastify"
+import { Resources } from "../interfaces/resources"
 
 export class ProductResources extends Resources<Product> {
     constructor(
-        private service: ProductService = new ProductService(),
+        private service: ProductServices = new ProductServices(),
         private schema: ProductSchemas = new ProductSchemas()
     ) {
         super()
@@ -30,7 +30,10 @@ export class ProductResources extends Resources<Product> {
         return products
     }
 
-    get = async (request: FastifyRequest<{ Params: Product }>, reply: any) => {
+    get = async (
+        request: FastifyRequest<{ Params: Product }>,
+        reply: FastifyReply
+    ) => {
         const { id } = request.params
         try {
             const product = await this.ensureProductExists(id, reply)
@@ -42,7 +45,7 @@ export class ProductResources extends Resources<Product> {
 
     update = async (
         request: FastifyRequest<{ Body: Product; Params: Product }>,
-        reply: any
+        reply: FastifyReply
     ) => {
         const { id } = request.params
         const body = request.body
@@ -62,7 +65,7 @@ export class ProductResources extends Resources<Product> {
 
     delete = async (
         request: FastifyRequest<{ Params: Product }>,
-        reply: any
+        reply: FastifyReply
     ) => {
         const { id } = request.params
         try {
@@ -76,7 +79,7 @@ export class ProductResources extends Resources<Product> {
         }
     }
 
-    private async ensureProductExists(id: string, reply: any) {
+    private async ensureProductExists(id: string, reply: FastifyReply) {
         const product = await this.service.getProductByID(id)
         if (!product) {
             reply.status(404).send({ message: "Product not found." })
@@ -85,7 +88,7 @@ export class ProductResources extends Resources<Product> {
         return product
     }
 
-    private handleError(reply: any, error: unknown, statusCode = 500) {
+    private handleError(reply: FastifyReply, error: unknown, statusCode = 500) {
         const message =
             error instanceof Error ? error.message : "Internal server error."
         reply.status(statusCode).send({ message })
