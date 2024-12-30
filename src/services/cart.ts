@@ -44,4 +44,10 @@ export class CartServices {
             where: { id },
         })
     }
+
+    async cleanCartByID(id: string): Promise<void> {
+        await this.ItemCartModel.deleteMany({
+            where: { cart_id: id },
+        })
+    }
 }
