@@ -1,4 +1,4 @@
-import { ItemCart, PrismaClient } from "@prisma/client"
+import { ItemCart, PrismaClient, Cart } from "@prisma/client"
 
 export class CartServices {
     private CartModel: PrismaClient["cart"]
@@ -10,7 +10,7 @@ export class CartServices {
         this.ItemCartModel = this.prisma.itemCart
     }
 
-    async createCart() {
+    async createCart(): Promise<Cart> {
         const cart = await this.CartModel.create({
             data: {},
             select: {
@@ -20,14 +20,14 @@ export class CartServices {
         return cart
     }
 
-    async getCartByID(id: string) {
+    async getCartByID(id: string): Promise<Cart | null> {
         const cart = await this.CartModel.findUnique({
             where: { id },
         })
         return cart
     }
 
-    async getCarts() {
+    async getCarts(): Promise<Cart[]> {
         const carts = await this.CartModel.findMany()
         return carts
     }
@@ -37,5 +37,11 @@ export class CartServices {
             where: { cart_id: id },
         })
         return itemsCart
+    }
+
+    async deleteCartByID(id: string): Promise<void> {
+        await this.CartModel.delete({
+            where: { id },
+        })
     }
 }
