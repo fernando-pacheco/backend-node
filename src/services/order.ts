@@ -25,6 +25,7 @@ export class OrderServices {
         //Services
         this.userService = userService
         this.paymentService = paymentService
+        this.cartService = cartService
     }
 
     async createOrder(body: Order): Promise<Order> {
