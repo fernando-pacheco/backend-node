@@ -52,5 +52,13 @@ export class CartRoutes extends Routes {
             docs: this.docsSchema.get,
             resource: this.resource.get as RouteHandlerMethod,
         })
+
+        FabricRoute({
+            app,
+            endpoint: "/cart/:id",
+            method: "delete",
+            docs: this.docsSchema.delete,
+            resource: this.resource.delete as RouteHandlerMethod,
+        })
     }
 }
