@@ -65,6 +65,22 @@ export class CartResources {
         }
     }
 
+    clean = async (
+        request: FastifyRequest<{ Params: Cart }>,
+        reply: FastifyReply
+    ) => {
+        const { id } = request.params
+        try {
+            await this.ensureCartExists(id, reply)
+            await this.service.cleanCartByID(id)
+            reply
+                .status(200)
+                .send({ message: `Cart ${id} successfully cleaned.` })
+        } catch (error) {
+            this.handleError(reply, error, 400)
+        }
+    }
+
     private async ensureCartExists(id: string, reply: FastifyReply) {
         const cart = await this.service.getCartByID(id)
         if (!cart) {
