@@ -49,6 +49,22 @@ export class CartResources {
         }
     }
 
+    delete = async (
+        request: FastifyRequest<{ Params: Cart }>,
+        reply: FastifyReply
+    ) => {
+        const { id } = request.params
+        try {
+            await this.ensureCartExists(id, reply)
+            await this.service.deleteCartByID(id)
+            reply
+                .status(200)
+                .send({ message: `Cart ${id} successfully deleted.` })
+        } catch (error) {
+            this.handleError(reply, error, 400)
+        }
+    }
+
     private async ensureCartExists(id: string, reply: FastifyReply) {
         const cart = await this.service.getCartByID(id)
         if (!cart) {
