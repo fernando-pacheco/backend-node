@@ -53,8 +53,20 @@ export class CartDocsSchemas {
                 tags: ["Carts"],
                 description: "Get cart by ID",
                 response: {
-                    201: this.schema.response,
+                    200: this.schema.response,
                     ...MessageResponses([400, 404, 500]),
+                },
+            },
+        }
+    }
+
+    public get delete() {
+        return {
+            schema: {
+                tags: ["Carts"],
+                description: "Delete cart by ID",
+                response: {
+                    ...MessageResponses([200, 400, 404, 500]),
                 },
             },
         }
