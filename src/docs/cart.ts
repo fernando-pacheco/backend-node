@@ -71,4 +71,16 @@ export class CartDocsSchemas {
             },
         }
     }
+
+    public get clean() {
+        return {
+            schema: {
+                tags: ["Carts"],
+                description: "Clean up cart by ID",
+                response: {
+                    ...MessageResponses([200, 400, 404, 500]),
+                },
+            },
+        }
+    }
 }
