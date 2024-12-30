@@ -56,6 +56,7 @@ export class CartResources {
         const { id } = request.params
         try {
             await this.ensureCartExists(id, reply)
+            await this.service.cleanCartByID(id)
             await this.service.deleteCartByID(id)
             reply
                 .status(200)
