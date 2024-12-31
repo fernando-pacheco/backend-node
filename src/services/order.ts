@@ -1,15 +1,18 @@
-import { Order, PrismaClient } from "@prisma/client"
+import {
+    Cart,
+    ItemCart,
+    Order,
+    Payment,
+    PrismaClient,
+    User,
+} from "@prisma/client"
 import { UserServices } from "./user"
 import { CartServices } from "./cart"
 import { PaymentServices } from "./payment"
 
 export class OrderServices {
     private OrderModel: PrismaClient["order"]
-    private UserModel: PrismaClient["user"]
-    private CartModel: PrismaClient["cart"]
-    private PaymentModel: PrismaClient["payment"]
 
-    //! Avaliar uso da service diretamente ao inves de instanciar o banco
     constructor(
         private prisma: PrismaClient = new PrismaClient(),
         private userService: UserServices = new UserServices(),
@@ -18,11 +21,6 @@ export class OrderServices {
     ) {
         this.prisma = prisma
         this.OrderModel = this.prisma.order
-        this.UserModel = this.prisma.user
-        this.CartModel = this.prisma.cart
-        this.PaymentModel = this.prisma.payment
-
-        //Services
         this.userService = userService
         this.paymentService = paymentService
         this.cartService = cartService
@@ -40,17 +38,53 @@ export class OrderServices {
         return order
     }
 
-    async getOrdersByUserID() {}
+    async getOrderByID(id: string): Promise<Order | null> {
+        const order = await this.OrderModel.findUnique({
+            where: { id },
+        })
 
-    async getOrderByID() {}
+        return order
+    }
 
-    async deleteOrderByID() {}
+    async getUserByOrderID(id: string): Promise<User | null> {
+        const { user_id } = await this.OrderModel.findUniqueOrThrow({
+            where: { id },
+        })
 
-    async getPaymentInfo() {}
+        return await this.userService.getUserByID(user_id)
+    }
 
-    async getCartInfo() {}
+    async getPaymentByOrderID(id: string): Promise<Payment | null> {
+        const { payment_id } = await this.OrderModel.findUniqueOrThrow({
+            where: { id },
+        })
 
-    async getUserInfo() {}
+        return await this.paymentService.getPaymentByID(payment_id)
+    }
 
-    async getOrderInfo() {}
+    async getCartByOrderID(id: string): Promise<Object> {
+        const { cart_id } = await this.OrderModel.findUniqueOrThrow({
+            where: { id },
+        })
+
+        return {
+            id: cart_id,
+            itemsCart: await this.cartService.listItemsCartByCartID(cart_id),
+        }
+    }
+
+    async getOrderInfo(id: string): Promise<Object> {
+        return {
+            id: id,
+            payment: await this.getPaymentByOrderID(id),
+            cart: await this.getCartByOrderID(id),
+            user: await this.getUserByOrderID(id),
+        }
+    }
+
+    async deleteOrderByID(id: string): Promise<void> {
+        await this.OrderModel.delete({
+            where: { id },
+        })
+    }
 }
