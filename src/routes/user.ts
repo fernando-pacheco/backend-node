@@ -47,6 +47,14 @@ export class UserRoutes extends Routes {
 
         FabricRoute({
             app,
+            endpoint: "/user/:id/orders",
+            method: "get",
+            docs: this.docsSchema.listOrders,
+            resource: this.resource.listOrders as RouteHandlerMethod,
+        })
+
+        FabricRoute({
+            app,
             endpoint: "/user/:id",
             method: "put",
             docs: this.docsSchema.update,

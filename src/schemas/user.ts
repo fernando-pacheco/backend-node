@@ -11,6 +11,15 @@ export class UserSchemas extends Schemas {
 
     public readonly listResponse = [this.response]
 
+    public readonly listOrders = z.array(
+        z.object({
+            id: z.string(),
+            payment_id: z.string(),
+            user_id: z.string(),
+            cart_id: z.string(),
+        })
+    )
+
     public readonly create = z.object({
         name: z.string().min(1, "Name is required"),
         email: z.string().email("Invalid email address"),

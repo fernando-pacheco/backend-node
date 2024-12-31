@@ -26,6 +26,16 @@ export class UserResources extends Resources<User> {
         return users
     }
 
+    listOrders = async (
+        request: FastifyRequest<{ Params: User }>,
+        reply: FastifyReply
+    ) => {
+        const { id } = request.params
+        await this.ensureUserExists(id, reply)
+        const orders = await this.service.getOrdersByUserID(id)
+        return orders
+    }
+
     get = async (
         request: FastifyRequest<{ Params: User }>,
         reply: FastifyReply
