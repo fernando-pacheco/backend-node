@@ -16,6 +16,7 @@ export class CartRoutes extends Routes {
     public registerRoutes(app: FastifyTypedInstance) {
         this.cartRegistersRoutes(app)
         this.cartHandlersRoutes(app)
+        this.cartInfoRoutes(app)
     }
 
     private cartRegistersRoutes(app: FastifyTypedInstance) {
@@ -52,7 +53,9 @@ export class CartRoutes extends Routes {
             docs: this.docsSchema.delete,
             resource: this.resource.delete as RouteHandlerMethod,
         })
+    }
 
+    private cartInfoRoutes(app: FastifyTypedInstance) {
         FactoryRoute({
             app,
             endpoint: "/cart/:id/items-cart",

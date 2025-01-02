@@ -32,7 +32,7 @@ export class ProductRoutes extends Routes {
             endpoint: "/product",
             method: "get",
             docs: this.docsSchema.list,
-            resource: this.resource.list,
+            resource: this.resource.list as RouteHandlerMethod,
         })
     }
 

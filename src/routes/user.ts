@@ -16,9 +16,10 @@ export class UserRoutes extends Routes {
     public registerRoutes(app: FastifyTypedInstance) {
         this.userRegistersRoutes(app)
         this.userHandlersRoutes(app)
+        this.userInfoRoutes(app)
     }
 
-    public userRegistersRoutes(app: FastifyTypedInstance) {
+    private userRegistersRoutes(app: FastifyTypedInstance) {
         FactoryRoute({
             app,
             endpoint: "/user",
@@ -36,7 +37,7 @@ export class UserRoutes extends Routes {
         })
     }
 
-    public userHandlersRoutes(app: FastifyTypedInstance) {
+    private userHandlersRoutes(app: FastifyTypedInstance) {
         FactoryRoute({
             app,
             endpoint: "/user/:id",
@@ -60,7 +61,9 @@ export class UserRoutes extends Routes {
             docs: this.docsSchema.update,
             resource: this.resource.update as RouteHandlerMethod,
         })
+    }
 
+    private userInfoRoutes(app: FastifyTypedInstance) {
         FactoryRoute({
             app,
             endpoint: "/user/:id",
