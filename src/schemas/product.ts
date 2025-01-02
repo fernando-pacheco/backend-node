@@ -8,7 +8,7 @@ export class ProductSchemas extends Schemas {
         price: z.number(),
     })
 
-    public readonly listResponse = [this.response]
+    public readonly listResponse = z.array(this.response)
 
     public readonly create = z.object({
         name: z.string().min(1, "Name is required"),

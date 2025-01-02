@@ -5,7 +5,7 @@ export class CartSchemas {
         id: z.string(),
     })
 
-    public readonly listResponse = [this.response]
+    public readonly listResponse = z.array(this.response)
 
     public readonly listItemsCart = z.array(
         z.object({

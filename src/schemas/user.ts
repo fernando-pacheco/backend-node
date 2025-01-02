@@ -9,7 +9,7 @@ export class UserSchemas extends Schemas {
         created_at: z.date().optional(),
     })
 
-    public readonly listResponse = [this.response]
+    public readonly listResponse = z.array(this.response)
 
     public readonly listOrders = z.array(
         z.object({
