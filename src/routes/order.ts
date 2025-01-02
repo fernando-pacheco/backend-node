@@ -71,13 +71,5 @@ export class OrderRoutes extends Routes {
             docs: this.docsSchema.getUser,
             resource: this.resource.getUser as RouteHandlerMethod,
         })
-
-        FactoryRoute({
-            app,
-            endpoint: "/order/:id/info",
-            method: "get",
-            docs: this.docsSchema.info,
-            resource: this.resource.info as RouteHandlerMethod,
-        })
     }
 }
