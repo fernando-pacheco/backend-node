@@ -22,6 +22,7 @@ export class ItemCartServices {
     async getItemCartByID(id: string): Promise<ItemCart | null> {
         const itemCart = await this.ItemCartModel.findUnique({
             where: { id },
+            include: { product: true },
         })
         return itemCart
     }

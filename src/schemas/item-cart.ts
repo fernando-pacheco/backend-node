@@ -5,8 +5,12 @@ import { SchemaType } from "../types/schema"
 export class ItemCartSchemas extends Schemas {
     public response: SchemaType = z.object({
         id: z.string(),
-        product_id: z.string(),
         cart_id: z.string(),
+        product: z.object({
+            id: z.string(),
+            name: z.string(),
+            price: z.number(),
+        }),
         amount: z.number(),
     })
 
