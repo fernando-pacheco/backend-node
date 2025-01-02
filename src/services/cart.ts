@@ -35,6 +35,7 @@ export class CartServices {
     async listItemsCartByCartID(id: string): Promise<ItemCart[]> {
         const itemsCart = await this.ItemCartModel.findMany({
             where: { cart_id: id },
+            include: { product: true },
         })
         return itemsCart
     }
