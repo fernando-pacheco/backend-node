@@ -1,8 +1,9 @@
 import { ProductServices } from "../services/product"
 import { ProductSchemas } from "../schemas/product"
 import { Product } from "@prisma/client"
-import { FastifyReply, FastifyRequest } from "fastify"
+import { FastifyReply } from "fastify"
 import { Resources } from "../interfaces/resources"
+import { RequestData } from "../types/resource"
 
 export class ProductResources extends Resources<Product> {
     constructor(
@@ -10,12 +11,18 @@ export class ProductResources extends Resources<Product> {
         private schema: ProductSchemas = new ProductSchemas()
     ) {
         super()
+
+        this.create = this.create.bind(this)
+        this.list = this.list.bind(this)
+        this.get = this.get.bind(this)
+        this.update = this.update.bind(this)
+        this.delete = this.delete.bind(this)
     }
 
-    create = async (
-        request: FastifyRequest<{ Body: Product }>,
+    public async create(
+        request: RequestData<{ name: string; id: string; price: number }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         try {
             const body = request.body
             const newProduct = await this.service.createProduct(body)
@@ -25,15 +32,18 @@ export class ProductResources extends Resources<Product> {
         }
     }
 
-    list = async () => {
+    public async list(
+        request: RequestData<{ name: string; id: string; price: number }>,
+        reply: FastifyReply
+    ): Promise<void> {
         const products = await this.service.getProducts()
-        return products
+        reply.status(200).send(this.schema.listResponse.parse(products))
     }
 
-    get = async (
-        request: FastifyRequest<{ Params: Product }>,
+    public async get(
+        request: RequestData<{ name: string; id: string; price: number }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const { id } = request.params
         try {
             const product = await this.ensureProductExists(id, reply)
@@ -43,10 +53,10 @@ export class ProductResources extends Resources<Product> {
         }
     }
 
-    update = async (
-        request: FastifyRequest<{ Body: Product; Params: Product }>,
+    public async update(
+        request: RequestData<{ name: string; id: string; price: number }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const { id } = request.params
         const body = request.body
         try {
@@ -63,10 +73,10 @@ export class ProductResources extends Resources<Product> {
         }
     }
 
-    delete = async (
-        request: FastifyRequest<{ Params: Product }>,
+    public async delete(
+        request: RequestData<{ name: string; id: string; price: number }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const { id } = request.params
         try {
             await this.ensureProductExists(id, reply)
@@ -86,11 +96,5 @@ export class ProductResources extends Resources<Product> {
             return null
         }
         return product
-    }
-
-    private handleError(reply: FastifyReply, error: unknown, statusCode = 500) {
-        const message =
-            error instanceof Error ? error.message : "Internal server error."
-        reply.status(statusCode).send({ message })
     }
 }

@@ -1,8 +1,9 @@
 import { UserServices } from "../services/user"
 import { UserSchemas } from "../schemas/user"
 import { Resources } from "../interfaces/resources"
-import { User } from "@prisma/client"
-import { FastifyReply, FastifyRequest } from "fastify"
+import { Order, User } from "@prisma/client"
+import { FastifyReply } from "fastify"
+import { RequestData } from "../types/resource"
 
 export class UserResources extends Resources<User> {
     constructor(
@@ -10,36 +11,58 @@ export class UserResources extends Resources<User> {
         private schema: UserSchemas = new UserSchemas()
     ) {
         super()
+
+        this.create = this.create.bind(this)
+        this.list = this.list.bind(this)
+        this.listOrders = this.listOrders.bind(this)
+        this.get = this.get.bind(this)
+        this.update = this.update.bind(this)
+        this.delete = this.delete.bind(this)
     }
 
-    create = async (
-        request: FastifyRequest<{ Body: User }>,
+    public async create(
+        request: RequestData<{
+            name: string
+            id: string
+            email: string
+            created_at: Date
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const body = request.body
         const newUser = await this.service.createUser(body)
         reply.status(201).send(newUser)
     }
 
-    list = async () => {
+    public async list(): Promise<User[]> {
         const users = await this.service.getUsers()
         return users
     }
 
-    listOrders = async (
-        request: FastifyRequest<{ Params: User }>,
+    public async listOrders(
+        request: RequestData<{
+            name: string
+            id: string
+            email: string
+            created_at: Date
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<Order[]> {
         const { id } = request.params
         await this.ensureUserExists(id, reply)
         const orders = await this.service.getOrdersByUserID(id)
         return orders
     }
 
-    get = async (
-        request: FastifyRequest<{ Params: User }>,
+    public async get(
+        request: RequestData<{
+            name: string
+            id: string
+            email: string
+            created_at: Date
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const { id } = request.params
         try {
             const user = await this.ensureUserExists(id, reply)
@@ -49,10 +72,15 @@ export class UserResources extends Resources<User> {
         }
     }
 
-    update = async (
-        request: FastifyRequest<{ Body: User; Params: User }>,
+    public async update(
+        request: RequestData<{
+            name: string
+            id: string
+            email: string
+            created_at: Date
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const { id } = request.params
         const body = request.body
         try {
@@ -69,10 +97,15 @@ export class UserResources extends Resources<User> {
         }
     }
 
-    delete = async (
-        request: FastifyRequest<{ Params: User }>,
+    public async delete(
+        request: RequestData<{
+            id: string
+            name: string
+            email: string
+            created_at: Date
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const { id } = request.params
         try {
             await this.ensureUserExists(id, reply)
@@ -92,11 +125,5 @@ export class UserResources extends Resources<User> {
             return null
         }
         return user
-    }
-
-    private handleError(reply: FastifyReply, error: unknown, statusCode = 500) {
-        const message =
-            error instanceof Error ? error.message : "Internal server error."
-        reply.status(statusCode).send({ message })
     }
 }

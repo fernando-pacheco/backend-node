@@ -2,22 +2,31 @@ import { ItemCart } from "@prisma/client"
 import { Resources } from "../interfaces/resources"
 import { ItemCartServices } from "../services/item-cart"
 import { ItemCartSchemas } from "../schemas/item-cart"
-import { FastifyReply, FastifyRequest } from "fastify"
-import { CartServices } from "../services/cart"
+import { FastifyReply } from "fastify"
+import { RequestData } from "../types/resource"
 
 export class ItemCartResources extends Resources<ItemCart> {
     constructor(
         private service: ItemCartServices = new ItemCartServices(),
-        private serviceCart: CartServices = new CartServices(),
         private schema: ItemCartSchemas = new ItemCartSchemas()
     ) {
         super()
+
+        this.create = this.create.bind(this)
+        this.get = this.get.bind(this)
+        this.update = this.update.bind(this)
+        this.delete = this.delete.bind(this)
     }
 
-    create = async (
-        request: FastifyRequest<{ Body: ItemCart }>,
+    public async create(
+        request: RequestData<{
+            id: string
+            product_id: string
+            amount: number
+            cart_id: string
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         try {
             const body = request.body
             const newItemCart = await this.service.createItemCart(body)
@@ -27,10 +36,15 @@ export class ItemCartResources extends Resources<ItemCart> {
         }
     }
 
-    get = async (
-        request: FastifyRequest<{ Params: ItemCart }>,
+    public async get(
+        request: RequestData<{
+            id: string
+            product_id: string
+            amount: number
+            cart_id: string
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const { id } = request.params
         try {
             const itemCart = await this.ensureItemCartExists(id, reply)
@@ -40,10 +54,15 @@ export class ItemCartResources extends Resources<ItemCart> {
         }
     }
 
-    update = async (
-        request: FastifyRequest<{ Body: ItemCart; Params: ItemCart }>,
+    public async update(
+        request: RequestData<{
+            id: string
+            product_id: string
+            amount: number
+            cart_id: string
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const { id } = request.params
         const body = request.body
         try {
@@ -60,10 +79,15 @@ export class ItemCartResources extends Resources<ItemCart> {
         }
     }
 
-    delete = async (
-        request: FastifyRequest<{ Params: ItemCart }>,
+    public async delete(
+        request: RequestData<{
+            id: string
+            product_id: string
+            amount: number
+            cart_id: string
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const { id } = request.params
         try {
             await this.ensureItemCartExists(id, reply)
@@ -83,11 +107,5 @@ export class ItemCartResources extends Resources<ItemCart> {
             return null
         }
         return itemCart
-    }
-
-    private handleError(reply: FastifyReply, error: unknown, statusCode = 500) {
-        const message =
-            error instanceof Error ? error.message : "Internal server error."
-        reply.status(statusCode).send({ message })
     }
 }

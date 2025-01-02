@@ -3,6 +3,7 @@ import { Resources } from "../interfaces/resources"
 import { OrderSchemas } from "../schemas/order"
 import { OrderServices } from "../services/order"
 import { FastifyRequest, FastifyReply } from "fastify"
+import { RequestData } from "../types/resource"
 
 export class OrderResources extends Resources<Order> {
     constructor(
@@ -10,12 +11,26 @@ export class OrderResources extends Resources<Order> {
         private schema: OrderSchemas = new OrderSchemas()
     ) {
         super()
+
+        this.create = this.create.bind(this)
+        this.get = this.get.bind(this)
+        this.getCart = this.getCart.bind(this)
+        this.getPayment = this.getPayment.bind(this)
+        this.getUser = this.getUser.bind(this)
+        this.info = this.info.bind(this)
+        this.update = this.update.bind(this)
+        this.delete = this.delete.bind(this)
     }
 
-    create = async (
-        request: FastifyRequest<{ Body: Order }>,
+    public async create(
+        request: RequestData<{
+            id: string
+            payment_id: string
+            user_id: string
+            cart_id: string
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         try {
             const body = request.body
             const newOrder = await this.service.createOrder(body)
@@ -25,79 +40,109 @@ export class OrderResources extends Resources<Order> {
         }
     }
 
-    get = async (
-        request: FastifyRequest<{ Params: Order }>,
+    public async get(
+        request: RequestData<{
+            id: string
+            payment_id: string
+            user_id: string
+            cart_id: string
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const { id } = request.params
         try {
-            const order = this.ensureOrderExists(id, reply)
+            const order = await this.ensureOrderExists(id, reply)
             reply.status(200).send(this.schema.response.parse(order))
         } catch (error) {
             this.handleError(reply, error, 400)
         }
     }
 
-    getCart = async (
-        request: FastifyRequest<{ Params: Order }>,
+    public async getCart(
+        request: RequestData<{
+            id: string
+            payment_id: string
+            user_id: string
+            cart_id: string
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const { id } = request.params
         try {
             this.ensureOrderExists(id, reply)
-            const cart = this.service.getCartByOrderID(id)
+            const cart = await this.service.getCartByOrderID(id)
             reply.status(200).send(this.schema.getCart.parse(cart))
         } catch (error) {
             this.handleError(reply, error, 400)
         }
     }
 
-    getPayment = async (
-        request: FastifyRequest<{ Params: Order }>,
+    public async getPayment(
+        request: RequestData<{
+            id: string
+            payment_id: string
+            user_id: string
+            cart_id: string
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const { id } = request.params
         try {
             this.ensureOrderExists(id, reply)
-            const payment = this.service.getPaymentByOrderID(id)
+            const payment = await this.service.getPaymentByOrderID(id)
             reply.status(200).send(this.schema.getPayment.parse(payment))
         } catch (error) {
             this.handleError(reply, error, 400)
         }
     }
 
-    getUser = async (
-        request: FastifyRequest<{ Params: Order }>,
+    public async getUser(
+        request: RequestData<{
+            id: string
+            payment_id: string
+            user_id: string
+            cart_id: string
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const { id } = request.params
         try {
             this.ensureOrderExists(id, reply)
-            const user = this.service.getUserByOrderID(id)
+            const user = await this.service.getUserByOrderID(id)
             reply.status(200).send(this.schema.getUser.parse(user))
         } catch (error) {
             this.handleError(reply, error, 400)
         }
     }
 
-    info = async (
-        request: FastifyRequest<{ Params: Order }>,
+    public async info(
+        request: RequestData<{
+            id: string
+            payment_id: string
+            user_id: string
+            cart_id: string
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const { id } = request.params
         try {
             this.ensureOrderExists(id, reply)
-            const orderInfo = this.service.getOrderInfo(id)
+            const orderInfo = await this.service.getOrderInfo(id)
             reply.status(200).send(this.schema.info.parse(orderInfo))
         } catch (error) {
             this.handleError(reply, error, 400)
         }
     }
 
-    update = async (
-        request: FastifyRequest<{ Params: Order; Body: Order }>,
+    public async update(
+        request: RequestData<{
+            id: string
+            payment_id: string
+            user_id: string
+            cart_id: string
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const { id } = request.params
         const body = request.body
         try {
@@ -110,10 +155,15 @@ export class OrderResources extends Resources<Order> {
         }
     }
 
-    delete = async (
-        request: FastifyRequest<{ Params: Order }>,
+    public async delete(
+        request: RequestData<{
+            id: string
+            payment_id: string
+            user_id: string
+            cart_id: string
+        }>,
         reply: FastifyReply
-    ) => {
+    ): Promise<void> {
         const { id } = request.params
         try {
             await this.ensureOrderExists(id, reply)
@@ -133,11 +183,5 @@ export class OrderResources extends Resources<Order> {
             return null
         }
         return order
-    }
-
-    private handleError(reply: FastifyReply, error: unknown, statusCode = 500) {
-        const message =
-            error instanceof Error ? error.message : "Internal server error."
-        reply.status(statusCode).send({ message })
     }
 }
