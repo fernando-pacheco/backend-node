@@ -4,15 +4,6 @@ import { PaymentMethod } from "@prisma/client"
 import { SchemaType } from "../types/schema"
 
 export class OrderSchemas extends Schemas {
-    public response: SchemaType = z.object({
-        id: z.string(),
-        payment_id: z.string(),
-        user_id: z.string(),
-        cart_id: z.string(),
-    })
-
-    public listResponse: SchemaType = z.array(this.response)
-
     public idParams: SchemaType = z.object({
         id: z.string().min(1, "Order ID is required"),
     })
@@ -59,10 +50,12 @@ export class OrderSchemas extends Schemas {
         created_at: z.date().optional(),
     })
 
-    public info: SchemaType = z.object({
+    public response: SchemaType = z.object({
         id: z.string(),
         payment: this.getPayment,
         user: this.getUser,
         cart: this.getCart,
     })
+
+    public listResponse: SchemaType = z.array(this.response)
 }

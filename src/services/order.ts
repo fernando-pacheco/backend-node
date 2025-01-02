@@ -34,6 +34,7 @@ export class OrderServices {
     async getOrderByID(id: string): Promise<Order | null> {
         const order = await this.OrderModel.findUnique({
             where: { id },
+            include: { payment: true, cart: true, user: true },
         })
 
         return order
