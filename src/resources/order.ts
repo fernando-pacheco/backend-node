@@ -17,7 +17,6 @@ export class OrderResources extends Resources<Order> {
         this.getCart = this.getCart.bind(this)
         this.getPayment = this.getPayment.bind(this)
         this.getUser = this.getUser.bind(this)
-        this.info = this.info.bind(this)
         this.update = this.update.bind(this)
         this.delete = this.delete.bind(this)
     }
@@ -110,25 +109,6 @@ export class OrderResources extends Resources<Order> {
             this.ensureOrderExists(id, reply)
             const user = await this.service.getUserByOrderID(id)
             reply.status(200).send(this.schema.getUser.parse(user))
-        } catch (error) {
-            this.handleError(reply, error, 400)
-        }
-    }
-
-    public async info(
-        request: RequestData<{
-            id: string
-            payment_id: string
-            user_id: string
-            cart_id: string
-        }>,
-        reply: FastifyReply
-    ): Promise<void> {
-        const { id } = request.params
-        try {
-            this.ensureOrderExists(id, reply)
-            const orderInfo = await this.service.getOrderInfo(id)
-            reply.status(200).send(this.schema.info.parse(orderInfo))
         } catch (error) {
             this.handleError(reply, error, 400)
         }
