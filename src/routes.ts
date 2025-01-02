@@ -3,7 +3,7 @@ import { ItemCartRoutes } from "./routes/item-cart"
 import { PaymentRoutes } from "./routes/payment"
 import { ProductRoutes } from "./routes/product"
 import { UserRoutes } from "./routes/user"
-import { FastifyTypedInstance } from "./types"
+import { FastifyTypedInstance } from "./types/types"
 
 export class Routes {
     constructor(

@@ -1,5 +1,5 @@
 import { RouteShorthandOptions, RouteHandlerMethod } from "fastify"
-import { FastifyTypedInstance } from "../types"
+import { FastifyTypedInstance } from "../types/types"
 
 export interface FabricRouteProps {
     app: FastifyTypedInstance

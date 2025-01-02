@@ -2,7 +2,7 @@ import { RouteHandlerMethod } from "fastify"
 import { ItemCartDocsSchemas } from "../docs/item-cart"
 import { Routes } from "../interfaces/routes"
 import { ItemCartResources } from "../resources/item-cart"
-import { FastifyTypedInstance } from "../types"
+import { FastifyTypedInstance } from "../types/types"
 import { FabricRoute } from "../utils/fabric-route"
 
 export class ItemCartRoutes extends Routes {

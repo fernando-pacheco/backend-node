@@ -2,7 +2,7 @@ import { RouteHandlerMethod } from "fastify"
 import { PaymentDocsSchemas } from "../docs/payment"
 import { Routes } from "../interfaces/routes"
 import { PaymentResources } from "../resources/payment"
-import { FastifyTypedInstance } from "../types"
+import { FastifyTypedInstance } from "../types/types"
 import { FabricRoute } from "../utils/fabric-route"
 
 export class PaymentRoutes extends Routes {

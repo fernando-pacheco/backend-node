@@ -1,7 +1,7 @@
 import { FabricRoute } from "../utils/fabric-route"
 import { UserDocsSchemas } from "../docs/user"
 import { UserResources } from "../resources/user"
-import { FastifyTypedInstance } from "../types"
+import { FastifyTypedInstance } from "../types/types"
 import { Routes } from "../interfaces/routes"
 import { RouteHandlerMethod } from "fastify"
 
