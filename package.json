@@ -4,9 +4,8 @@
     "main": "index.js",
     "scripts": {
         "dev": "tsx watch src/server.ts",
-        "build": "exec tsc",
+        "build": "tsc && cp -r prisma dist/prisma",
         "test": "jest --coverage --verbose",
-        "copy-prisma": "cp -R prisma dist/",
         "generate": "prisma generate",
         "start": "node dist/server.js"
     },
