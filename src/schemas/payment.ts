@@ -1,5 +1,5 @@
-import { PaymentMethod } from "@prisma/client"
 import { z } from "zod"
+import { PaymentMethod } from "@prisma/client"
 import { Schemas } from "../interfaces/schemas"
 
 export class PaymentSchemas extends Schemas {

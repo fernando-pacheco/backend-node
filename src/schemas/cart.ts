@@ -1,5 +1,4 @@
 import { z } from "zod"
-import { ItemCart } from "@prisma/client"
 
 export class CartSchemas {
     public readonly response = z.object({

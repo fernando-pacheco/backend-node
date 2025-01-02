@@ -1,4 +1,3 @@
-import { DocsSchemas } from "../interfaces/docs-schemas"
 import { CartSchemas } from "../schemas/cart"
 import { MessageResponses } from "../utils/message-responses"
 

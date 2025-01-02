@@ -1,11 +1,4 @@
-import {
-    Cart,
-    ItemCart,
-    Order,
-    Payment,
-    PrismaClient,
-    User,
-} from "@prisma/client"
+import { Order, Payment, PrismaClient, User } from "@prisma/client"
 import { UserServices } from "./user"
 import { CartServices } from "./cart"
 import { PaymentServices } from "./payment"
