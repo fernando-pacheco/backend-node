@@ -1,60 +1,75 @@
-import { FabricRoute } from "../utils/fabric-route"
-import {
-    UserGetDocSchema,
-    UserCreateDocSchema,
-    UserListDocSchema,
-    UserDeleteDocSchema,
-    UserPutDocSchema,
-} from "../docs/user"
-import {
-    UserCreateResource,
-    UserDeleteResource,
-    UserGetResource,
-    UserListResource,
-    UserPutResource,
-} from "../resources/user"
-import { FastifyTypedInstance } from "../types"
+import { FactoryRoute } from "../utils/factory-route"
+import { UserDocsSchemas } from "../docs/user"
+import { UserResources } from "../resources/user"
+import { FastifyTypedInstance } from "../types/types"
+import { Routes } from "../interfaces/routes"
+import { RouteHandlerMethod } from "fastify"
 
-export function UserListRoutes(app: FastifyTypedInstance) {
-    FabricRoute({
-        app,
-        endpoint: "/users",
-        method: "get",
-        docs: UserListDocSchema,
-        resource: UserListResource,
-    })
+export class UserRoutes extends Routes {
+    constructor(
+        private resource: UserResources = new UserResources(),
+        private docsSchema: UserDocsSchemas = new UserDocsSchemas()
+    ) {
+        super()
+    }
 
-    FabricRoute({
-        app,
-        endpoint: "/users",
-        method: "post",
-        docs: UserCreateDocSchema,
-        resource: UserCreateResource,
-    })
-}
+    public registerRoutes(app: FastifyTypedInstance) {
+        this.userRegistersRoutes(app)
+        this.userHandlersRoutes(app)
+        this.userInfoRoutes(app)
+    }
 
-export function UserRoutes(app: FastifyTypedInstance) {
-    FabricRoute({
-        app,
-        endpoint: "/users/:id",
-        method: "get",
-        docs: UserGetDocSchema,
-        resource: UserGetResource,
-    })
+    private userRegistersRoutes(app: FastifyTypedInstance) {
+        FactoryRoute({
+            app,
+            endpoint: "/user",
+            method: "post",
+            docs: this.docsSchema.create,
+            resource: this.resource.create as RouteHandlerMethod,
+        })
 
-    FabricRoute({
-        app,
-        endpoint: "/users/:id",
-        method: "put",
-        docs: UserPutDocSchema,
-        resource: UserPutResource,
-    })
+        FactoryRoute({
+            app,
+            endpoint: "/user",
+            method: "get",
+            docs: this.docsSchema.list,
+            resource: this.resource.list as RouteHandlerMethod,
+        })
+    }
 
-    FabricRoute({
-        app,
-        endpoint: "/users/:id",
-        method: "delete",
-        docs: UserDeleteDocSchema,
-        resource: UserDeleteResource,
-    })
+    private userHandlersRoutes(app: FastifyTypedInstance) {
+        FactoryRoute({
+            app,
+            endpoint: "/user/:id",
+            method: "get",
+            docs: this.docsSchema.get,
+            resource: this.resource.get as RouteHandlerMethod,
+        })
+
+        FactoryRoute({
+            app,
+            endpoint: "/user/:id/orders",
+            method: "get",
+            docs: this.docsSchema.listOrders,
+            resource: this.resource.listOrders as RouteHandlerMethod,
+        })
+
+        FactoryRoute({
+            app,
+            endpoint: "/user/:id",
+            method: "put",
+            docs: this.docsSchema.update,
+            resource: this.resource.update as RouteHandlerMethod,
+        })
+    }
+
+    private userInfoRoutes(app: FastifyTypedInstance) {
+        FactoryRoute({
+            app,
+            endpoint: "/user/:id",
+            method: "delete",
+            docs: this.docsSchema.delete,
+            resource: this.resource.delete as RouteHandlerMethod,
+        })
+    }
 }

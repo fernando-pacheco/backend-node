@@ -1,173 +1,156 @@
-import {
-    createUser,
-    deleteUserByID,
-    getUserByID,
-    getUsers,
-    updateUser,
-} from "../src/models/user"
-import {
-    UserCreateResource,
-    UserDeleteResource,
-    UserGetResource,
-    UserListResource,
-    UserPutResource,
-} from "../src/resources/user"
-import { UserResponseSchema } from "../src/schemas/user"
+import { UserServices } from "../src/services/user"
+import { PrismaClient, User, Order } from "@prisma/client"
 
-jest.mock("../src/models/user")
+describe("UserServices", () => {
+    let userService: UserServices
+    let prismaMock: PrismaClient
 
-describe("UserListResource", () => {
-    it("should return a list of users", async () => {
-        const mockUsers = [
-            { id: "1", name: "John Doe", email: "john@example.com" },
-            { id: "2", name: "Jane Doe", email: "jane@example.com" },
-        ]
-
-        ;(getUsers as jest.Mock).mockResolvedValue(mockUsers)
-        const result = await UserListResource()
-
-        expect(getUsers).toHaveBeenCalledTimes(1)
-        expect(result).toEqual(mockUsers)
-    })
-})
-
-describe("UserCreateResource", () => {
-    it("should create a user and return it with status 201", async () => {
-        const requestBody = { name: "John Doe", email: "john@example.com" }
-        const mockUser = { id: "1", ...requestBody }
-
-        ;(createUser as jest.Mock).mockResolvedValue(mockUser)
-
-        const mockRequest = { body: requestBody }
-        const mockReply = {
-            status: jest.fn().mockReturnThis(),
-            send: jest.fn(),
-        }
-
-        await UserCreateResource(mockRequest, mockReply)
-
-        expect(createUser).toHaveBeenCalledWith(requestBody)
-        expect(mockReply.status).toHaveBeenCalledWith(201)
-        expect(mockReply.send).toHaveBeenCalledWith(mockUser)
-    })
-})
-
-describe("UserGetResource", () => {
-    it("should return a user if found", async () => {
-        const mockUser = {
-            id: "1",
-            name: "John Doe",
-            email: "john@example.com",
-        }
-
-        ;(getUserByID as jest.Mock).mockResolvedValue(mockUser)
-
-        const mockRequest = { params: { id: "1" } }
-        const mockReply = {
-            status: jest.fn().mockReturnThis(),
-            send: jest.fn(),
-        }
-
-        await UserGetResource(mockRequest, mockReply)
-
-        expect(getUserByID).toHaveBeenCalledWith("1")
-        expect(mockReply.status).toHaveBeenCalledWith(200)
-        expect(mockReply.send).toHaveBeenCalledWith(
-            UserResponseSchema.parse(mockUser)
-        )
+    beforeEach(() => {
+        prismaMock = new PrismaClient()
+        userService = new UserServices(prismaMock)
     })
 
-    it("should return 404 if user is not found", async () => {
-        ;(getUserByID as jest.Mock).mockResolvedValue(null)
+    afterEach(() => {
+        jest.clearAllMocks()
+    })
 
-        const mockRequest = { params: { id: "1" } }
-        const mockReply = {
-            status: jest.fn().mockReturnThis(),
-            send: jest.fn(),
-        }
+    describe("createUser", () => {
+        it("should create a user", async () => {
+            const userData: User = {
+                id: "1",
+                name: "Test User",
+                email: "testuser@example.com",
+                created_at: new Date(),
+            }
 
-        await UserGetResource(mockRequest, mockReply)
+            jest.spyOn(prismaMock.user, "create").mockResolvedValue(userData)
 
-        expect(mockReply.status).toHaveBeenCalledWith(404)
-        expect(mockReply.send).toHaveBeenCalledWith({
-            message: "User not found.",
+            const result = await userService.createUser(userData)
+
+            expect(prismaMock.user.create).toHaveBeenCalledWith({
+                data: {
+                    name: userData.name,
+                    email: userData.email,
+                },
+            })
+            expect(result).toEqual(userData)
         })
     })
-})
 
-describe("UserPutResource", () => {
-    it("should update a user and return the updated user", async () => {
-        const mockUser = {
-            id: "1",
-            name: "John Doe",
-            email: "john@example.com",
-        }
-        const updatedUser = {
-            id: "1",
-            name: "John Doe",
-            email: "john@newdomain.com",
-        }
+    describe("getUsers", () => {
+        it("should return a list of users", async () => {
+            const users: User[] = [
+                {
+                    id: "1",
+                    name: "User 1",
+                    email: "user1@example.com",
+                    created_at: new Date(),
+                },
+                {
+                    id: "2",
+                    name: "User 2",
+                    email: "user2@example.com",
+                    created_at: new Date(),
+                },
+            ]
 
-        ;(getUserByID as jest.Mock).mockResolvedValue(mockUser)
-        ;(updateUser as jest.Mock).mockResolvedValue(updatedUser)
+            jest.spyOn(prismaMock.user, "findMany").mockResolvedValue(users)
 
-        const mockRequest = {
-            params: { id: "1" },
-            body: { email: "john@newdomain.com" },
-        }
-        const mockReply = {
-            status: jest.fn().mockReturnThis(),
-            send: jest.fn(),
-        }
+            const result = await userService.getUsers()
 
-        await UserPutResource(mockRequest, mockReply)
-
-        expect(getUserByID).toHaveBeenCalledWith("1")
-        expect(updateUser).toHaveBeenCalledWith("1", {
-            email: "john@newdomain.com",
+            expect(prismaMock.user.findMany).toHaveBeenCalled()
+            expect(result).toEqual(users)
         })
-        expect(mockReply.status).toHaveBeenCalledWith(200)
-        expect(mockReply.send).toHaveBeenCalledWith(updatedUser)
     })
 
-    it("should return 400 if the body is empty", async () => {
-        const mockRequest = { params: { id: "1" }, body: {} }
-        const mockReply = {
-            status: jest.fn().mockReturnThis(),
-            send: jest.fn(),
-        }
+    describe("getUserByID", () => {
+        it("should return a user by ID", async () => {
+            const user: User = {
+                id: "1",
+                name: "Test User",
+                email: "testuser@example.com",
+                created_at: new Date(),
+            }
 
-        await UserPutResource(mockRequest, mockReply)
+            jest.spyOn(prismaMock.user, "findUnique").mockResolvedValue(user)
 
-        expect(mockReply.status).toHaveBeenCalledWith(400)
-        expect(mockReply.send).toHaveBeenCalledWith({ message: "Empty body." })
+            const result = await userService.getUserByID("1")
+
+            expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+                where: { id: "1" },
+            })
+            expect(result).toEqual(user)
+        })
+
+        it("should return null if user does not exist", async () => {
+            jest.spyOn(prismaMock.user, "findUnique").mockResolvedValue(null)
+
+            const result = await userService.getUserByID("999")
+
+            expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+                where: { id: "999" },
+            })
+            expect(result).toBeNull()
+        })
     })
-})
 
-describe("UserDeleteResource", () => {
-    it("should delete a user", async () => {
-        const mockUser = {
-            id: "1",
-            name: "John Doe",
-            email: "john@example.com",
-        }
+    describe("updateUser", () => {
+        it("should update a user", async () => {
+            const updatedUser: User = {
+                id: "1",
+                name: "Updated User",
+                email: "updateduser@example.com",
+                created_at: new Date(),
+            }
 
-        ;(getUserByID as jest.Mock).mockResolvedValue(mockUser)
-        ;(deleteUserByID as jest.Mock).mockResolvedValue(undefined)
+            jest.spyOn(prismaMock.user, "update").mockResolvedValue(updatedUser)
 
-        const mockRequest = { params: { id: "1" } }
-        const mockReply = {
-            status: jest.fn().mockReturnThis(),
-            send: jest.fn(),
-        }
+            const result = await userService.updateUser("1", updatedUser)
 
-        await UserDeleteResource(mockRequest, mockReply)
+            expect(prismaMock.user.update).toHaveBeenCalledWith({
+                where: { id: "1" },
+                data: {
+                    name: updatedUser.name,
+                    email: updatedUser.email,
+                },
+            })
+            expect(result).toEqual(updatedUser)
+        })
+    })
 
-        expect(getUserByID).toHaveBeenCalledWith("1")
-        expect(deleteUserByID).toHaveBeenCalledWith("1")
-        expect(mockReply.status).toHaveBeenCalledWith(200)
-        expect(mockReply.send).toHaveBeenCalledWith({
-            message: `User {1} successfully deleted.`,
+    describe("deleteUserByID", () => {
+        it("should delete a user by ID", async () => {
+            jest.spyOn(prismaMock.user, "delete").mockResolvedValue({
+                id: "1",
+                name: "Deleted User",
+                email: "deleteduser@example.com",
+                created_at: new Date(),
+            })
+
+            await userService.deleteUserByID("1")
+
+            expect(prismaMock.user.delete).toHaveBeenCalledWith({
+                where: { id: "1" },
+            })
+        })
+    })
+
+    describe("getOrdersByUserID", () => {
+        it("should return a list of orders for a user", async () => {
+            const orders: Order[] = [
+                { id: "1", user_id: "1", cart_id: "", payment_id: "" },
+                { id: "2", user_id: "1", cart_id: "", payment_id: "" },
+            ]
+
+            jest.spyOn(prismaMock.order, "findMany").mockResolvedValue(orders)
+
+            const result = await userService.getOrdersByUserID("1")
+
+            expect(prismaMock.order.findMany).toHaveBeenCalledWith({
+                where: { user_id: "1" },
+                include: { cart: true, payment: true, user: true },
+            })
+            expect(result).toEqual(orders)
         })
     })
 })

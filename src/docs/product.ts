@@ -1,18 +1,18 @@
 import { FastifySchema } from "fastify"
 import { DocsSchemas } from "../interfaces/docs-schemas"
-import { UserSchemas } from "../schemas/user"
+import { ProductSchemas } from "../schemas/product"
 import { MessageResponses } from "../utils/message-responses"
 
-export class UserDocsSchemas extends DocsSchemas {
-    constructor(private schema: UserSchemas = new UserSchemas()) {
+export class ProductDocsSchemas extends DocsSchemas {
+    constructor(private schema: ProductSchemas = new ProductSchemas()) {
         super()
     }
 
     public get create(): { schema: FastifySchema } {
         return {
             schema: {
-                tags: ["Users"],
-                description: "Create a new user",
+                tags: ["Products"],
+                description: "Create a new product",
                 body: this.schema.create,
                 response: {
                     201: this.schema.response,
@@ -25,8 +25,8 @@ export class UserDocsSchemas extends DocsSchemas {
     public get list(): { schema: FastifySchema } {
         return {
             schema: {
-                tags: ["Users"],
-                description: "List users",
+                tags: ["Products"],
+                description: "List products",
                 response: {
                     200: this.schema.listResponse,
                     ...MessageResponses([500]),
@@ -35,25 +35,11 @@ export class UserDocsSchemas extends DocsSchemas {
         }
     }
 
-    public get listOrders(): { schema: FastifySchema } {
-        return {
-            schema: {
-                tags: ["Users"],
-                description: "List orders by user ID",
-                params: this.schema.idParams,
-                response: {
-                    200: this.schema.listOrders,
-                    ...MessageResponses([400, 404, 500]),
-                },
-            },
-        }
-    }
-
     public get get(): { schema: FastifySchema } {
         return {
             schema: {
-                tags: ["Users"],
-                description: "Get user by ID",
+                tags: ["Products"],
+                description: "Get product by ID",
                 params: this.schema.idParams,
                 response: {
                     200: this.schema.response,
@@ -66,10 +52,10 @@ export class UserDocsSchemas extends DocsSchemas {
     public get update(): { schema: FastifySchema } {
         return {
             schema: {
-                tags: ["Users"],
-                description: "Update user by ID",
-                params: this.schema.idParams,
+                tags: ["Products"],
+                description: "Update product by ID",
                 body: this.schema.update,
+                params: this.schema.idParams,
                 response: {
                     200: this.schema.response,
                     ...MessageResponses([400, 404, 500]),
@@ -81,8 +67,8 @@ export class UserDocsSchemas extends DocsSchemas {
     public get delete(): { schema: FastifySchema } {
         return {
             schema: {
-                tags: ["Users"],
-                description: "Delete user by ID",
+                tags: ["Products"],
+                description: "Delete product by ID",
                 params: this.schema.idParams,
                 response: {
                     ...MessageResponses([200, 400, 404, 500]),

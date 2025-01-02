@@ -40,14 +40,11 @@ jobs:
           name: image
           path: image.txt
 
-  test:
+  migrate:
     runs-on: ${{ github.ref == 'refs/heads/qa' && 'qa-fpx-server' || 'prod-fpx-server' }}
     environment: ${{ github.ref == 'refs/heads/qa' && 'qa' || 'prod' }}
     env:
-        API_URL: ${{ secrets.API_URL }}
-        API_PORT: ${{ secrets.API_PORT }}
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        NODE_ENV: ${{ secrets.NODE_ENV }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     needs: build
     steps:
       - name: Download image artifact
@@ -58,7 +55,24 @@ jobs:
       - name: Run tests
         run: |
           IMAGE=$(cat image.txt)
-          echo "Rodando os testes com Jest. Aguarde..."
+          echo "Realizando migrações..."
+          echo "Executando as migrações no banco"
+          docker run --rm $IMAGE pnpm prisma migrate deploy
+
+  test:
+    runs-on: ${{ github.ref == 'refs/heads/qa' && 'qa-fpx-server' || 'prod-fpx-server' }}
+    environment: ${{ github.ref == 'refs/heads/qa' && 'qa' || 'prod' }}
+    needs: migrate
+    steps:
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: image
+
+      - name: Run tests
+        run: |
+          IMAGE=$(cat image.txt)
+          echo "Rodando os testes com Jest..."
           echo "Executando os testes na imagem $IMAGE"
           docker run --rm $IMAGE pnpm test
 

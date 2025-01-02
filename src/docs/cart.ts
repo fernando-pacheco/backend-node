@@ -1,19 +1,18 @@
 import { FastifySchema } from "fastify"
 import { DocsSchemas } from "../interfaces/docs-schemas"
-import { UserSchemas } from "../schemas/user"
+import { CartSchemas } from "../schemas/cart"
 import { MessageResponses } from "../utils/message-responses"
 
-export class UserDocsSchemas extends DocsSchemas {
-    constructor(private schema: UserSchemas = new UserSchemas()) {
+export class CartDocsSchemas extends DocsSchemas {
+    constructor(private schema: CartSchemas = new CartSchemas()) {
         super()
     }
 
     public get create(): { schema: FastifySchema } {
         return {
             schema: {
-                tags: ["Users"],
-                description: "Create a new user",
-                body: this.schema.create,
+                tags: ["Carts"],
+                description: "Create a cart",
                 response: {
                     201: this.schema.response,
                     ...MessageResponses([400, 500]),
@@ -25,8 +24,8 @@ export class UserDocsSchemas extends DocsSchemas {
     public get list(): { schema: FastifySchema } {
         return {
             schema: {
-                tags: ["Users"],
-                description: "List users",
+                tags: ["Carts"],
+                description: "List carts",
                 response: {
                     200: this.schema.listResponse,
                     ...MessageResponses([500]),
@@ -35,15 +34,15 @@ export class UserDocsSchemas extends DocsSchemas {
         }
     }
 
-    public get listOrders(): { schema: FastifySchema } {
+    public get listItemsCart(): { schema: FastifySchema } {
         return {
             schema: {
-                tags: ["Users"],
-                description: "List orders by user ID",
+                tags: ["Carts"],
+                description: "List items by cart ID",
                 params: this.schema.idParams,
                 response: {
-                    200: this.schema.listOrders,
-                    ...MessageResponses([400, 404, 500]),
+                    200: this.schema.listItemsCart,
+                    ...MessageResponses([500]),
                 },
             },
         }
@@ -52,9 +51,8 @@ export class UserDocsSchemas extends DocsSchemas {
     public get get(): { schema: FastifySchema } {
         return {
             schema: {
-                tags: ["Users"],
-                description: "Get user by ID",
-                params: this.schema.idParams,
+                tags: ["Carts"],
+                description: "Get cart by ID",
                 response: {
                     200: this.schema.response,
                     ...MessageResponses([400, 404, 500]),
@@ -64,26 +62,26 @@ export class UserDocsSchemas extends DocsSchemas {
     }
 
     public get update(): { schema: FastifySchema } {
-        return {
-            schema: {
-                tags: ["Users"],
-                description: "Update user by ID",
-                params: this.schema.idParams,
-                body: this.schema.update,
-                response: {
-                    200: this.schema.response,
-                    ...MessageResponses([400, 404, 500]),
-                },
-            },
-        }
+        return { schema: {} }
     }
 
     public get delete(): { schema: FastifySchema } {
         return {
             schema: {
-                tags: ["Users"],
-                description: "Delete user by ID",
-                params: this.schema.idParams,
+                tags: ["Carts"],
+                description: "Delete cart by ID",
+                response: {
+                    ...MessageResponses([200, 400, 404, 500]),
+                },
+            },
+        }
+    }
+
+    public get clean(): { schema: FastifySchema } {
+        return {
+            schema: {
+                tags: ["Carts"],
+                description: "Clean up cart by ID",
                 response: {
                     ...MessageResponses([200, 400, 404, 500]),
                 },

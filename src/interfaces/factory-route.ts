@@ -1,7 +1,7 @@
 import { RouteShorthandOptions, RouteHandlerMethod } from "fastify"
-import { FastifyTypedInstance } from "../types"
+import { FastifyTypedInstance } from "../types/types"
 
-export interface FabricRouteProps {
+export interface FactoryRouteProps {
     app: FastifyTypedInstance
     endpoint: string
     method: "get" | "post" | "put" | "delete"
