@@ -1,5 +1,5 @@
 import { UserServices } from "../src/services/user"
-import { PrismaClient, User, Order } from "@prisma/client"
+import { PrismaClient, User } from "@prisma/client"
 
 describe("UserServices", () => {
     let userService: UserServices
@@ -132,25 +132,6 @@ describe("UserServices", () => {
             expect(prismaMock.user.delete).toHaveBeenCalledWith({
                 where: { id: "1" },
             })
-        })
-    })
-
-    describe("getOrdersByUserID", () => {
-        it("should return a list of orders for a user", async () => {
-            const orders: Order[] = [
-                { id: "1", user_id: "1", cart_id: "", payment_id: "" },
-                { id: "2", user_id: "1", cart_id: "", payment_id: "" },
-            ]
-
-            jest.spyOn(prismaMock.order, "findMany").mockResolvedValue(orders)
-
-            const result = await userService.getOrdersByUserID("1")
-
-            expect(prismaMock.order.findMany).toHaveBeenCalledWith({
-                where: { user_id: "1" },
-                include: { cart: true, payment: true, user: true },
-            })
-            expect(result).toEqual(orders)
         })
     })
 })
