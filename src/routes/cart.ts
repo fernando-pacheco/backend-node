@@ -24,7 +24,7 @@ export class CartRoutes extends Routes {
             endpoint: "/cart",
             method: "post",
             docs: this.docsSchema.create,
-            resource: this.resource.create,
+            resource: this.resource.create as RouteHandlerMethod,
         })
 
         FabricRoute({
@@ -32,7 +32,7 @@ export class CartRoutes extends Routes {
             endpoint: "/cart",
             method: "get",
             docs: this.docsSchema.list,
-            resource: this.resource.list,
+            resource: this.resource.list as RouteHandlerMethod,
         })
     }
 
