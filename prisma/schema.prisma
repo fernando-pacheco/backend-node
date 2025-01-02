@@ -29,18 +29,18 @@ model Order {
   payment_id String  @unique
   user_id    String
   cart_id    String  @unique
+  cart       Cart    @relation(fields: [cart_id], references: [id], onDelete: Cascade)
   payment    Payment @relation(fields: [payment_id], references: [id], onDelete: Cascade)
   user       User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  cart       Cart    @relation(fields: [cart_id], references: [id], onDelete: Cascade)
 }
 
 model ItemCart {
   id         String  @id @default(cuid())
   product_id String
   amount     Int
-  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
   cart_id    String
   cart       Cart    @relation(fields: [cart_id], references: [id], onDelete: Cascade)
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
 }
 
 model Cart {
