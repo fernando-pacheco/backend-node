@@ -35,20 +35,6 @@ export class UserDocsSchemas extends DocsSchemas {
         }
     }
 
-    public get listOrders(): { schema: FastifySchema } {
-        return {
-            schema: {
-                tags: ["Users"],
-                description: "List orders by user ID",
-                params: this.schema.idParams,
-                response: {
-                    200: this.schema.listOrders,
-                    ...MessageResponses([400, 404, 500]),
-                },
-            },
-        }
-    }
-
     public get get(): { schema: FastifySchema } {
         return {
             schema: {

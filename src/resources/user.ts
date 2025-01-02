@@ -1,7 +1,7 @@
 import { UserServices } from "../services/user"
 import { UserSchemas } from "../schemas/user"
 import { Resources } from "../interfaces/resources"
-import { Order, User } from "@prisma/client"
+import { User } from "@prisma/client"
 import { FastifyReply } from "fastify"
 import { RequestData } from "../types/resource"
 
@@ -14,7 +14,6 @@ export class UserResources extends Resources<User> {
 
         this.create = this.create.bind(this)
         this.list = this.list.bind(this)
-        this.listOrders = this.listOrders.bind(this)
         this.get = this.get.bind(this)
         this.update = this.update.bind(this)
         this.delete = this.delete.bind(this)
@@ -37,21 +36,6 @@ export class UserResources extends Resources<User> {
     public async list(): Promise<User[]> {
         const users = await this.service.getUsers()
         return users
-    }
-
-    public async listOrders(
-        request: RequestData<{
-            name: string
-            id: string
-            email: string
-            created_at: Date
-        }>,
-        reply: FastifyReply
-    ): Promise<Order[]> {
-        const { id } = request.params
-        await this.ensureUserExists(id, reply)
-        const orders = await this.service.getOrdersByUserID(id)
-        return orders
     }
 
     public async get(
