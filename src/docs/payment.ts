@@ -1,3 +1,4 @@
+import { FastifySchema } from "fastify"
 import { DocsSchemas } from "../interfaces/docs-schemas"
 import { PaymentSchemas } from "../schemas/payment"
 import { MessageResponses } from "../utils/message-responses"
@@ -33,5 +34,13 @@ export class PaymentDocsSchemas extends DocsSchemas {
                 },
             },
         }
+    }
+
+    public get update(): { schema: FastifySchema } {
+        return { schema: {} }
+    }
+
+    public get delete(): { schema: FastifySchema } {
+        return { schema: {} }
     }
 }

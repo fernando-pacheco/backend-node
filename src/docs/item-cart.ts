@@ -1,3 +1,4 @@
+import { FastifySchema } from "fastify"
 import { DocsSchemas } from "../interfaces/docs-schemas"
 import { ItemCartSchemas } from "../schemas/item-cart"
 import { MessageResponses } from "../utils/message-responses"
@@ -7,7 +8,7 @@ export class ItemCartDocsSchemas extends DocsSchemas {
         super()
     }
 
-    public get create() {
+    public get create(): { schema: FastifySchema } {
         return {
             schema: {
                 tags: ["ItemsCart"],
@@ -21,7 +22,7 @@ export class ItemCartDocsSchemas extends DocsSchemas {
         }
     }
 
-    public get get() {
+    public get get(): { schema: FastifySchema } {
         return {
             schema: {
                 tags: ["ItemsCart"],
@@ -35,7 +36,7 @@ export class ItemCartDocsSchemas extends DocsSchemas {
         }
     }
 
-    public get update() {
+    public get update(): { schema: FastifySchema } {
         return {
             schema: {
                 tags: ["ItemsCart"],
@@ -50,7 +51,7 @@ export class ItemCartDocsSchemas extends DocsSchemas {
         }
     }
 
-    public get delete() {
+    public get delete(): { schema: FastifySchema } {
         return {
             schema: {
                 tags: ["ItemsCart"],

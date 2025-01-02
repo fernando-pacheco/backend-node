@@ -1,12 +1,14 @@
+import { FastifySchema } from "fastify"
+import { DocsSchemas } from "../interfaces/docs-schemas"
 import { CartSchemas } from "../schemas/cart"
 import { MessageResponses } from "../utils/message-responses"
 
-export class CartDocsSchemas {
+export class CartDocsSchemas extends DocsSchemas {
     constructor(private schema: CartSchemas = new CartSchemas()) {
-        this.schema = schema
+        super()
     }
 
-    public get create() {
+    public get create(): { schema: FastifySchema } {
         return {
             schema: {
                 tags: ["Carts"],
@@ -19,12 +21,12 @@ export class CartDocsSchemas {
         }
     }
 
-    public get list() {
+    public get list(): { schema: FastifySchema } {
         return {
             schema: {
                 tags: ["Carts"],
                 description: "List carts",
-                responses: {
+                response: {
                     200: this.schema.listResponse,
                     ...MessageResponses([500]),
                 },
@@ -32,13 +34,13 @@ export class CartDocsSchemas {
         }
     }
 
-    public get listItemsCart() {
+    public get listItemsCart(): { schema: FastifySchema } {
         return {
             schema: {
                 tags: ["Carts"],
                 description: "List items by cart ID",
                 params: this.schema.idParams,
-                responses: {
+                response: {
                     200: this.schema.listItemsCart,
                     ...MessageResponses([500]),
                 },
@@ -46,7 +48,7 @@ export class CartDocsSchemas {
         }
     }
 
-    public get get() {
+    public get get(): { schema: FastifySchema } {
         return {
             schema: {
                 tags: ["Carts"],
@@ -59,7 +61,11 @@ export class CartDocsSchemas {
         }
     }
 
-    public get delete() {
+    public get update(): { schema: FastifySchema } {
+        return { schema: {} }
+    }
+
+    public get delete(): { schema: FastifySchema } {
         return {
             schema: {
                 tags: ["Carts"],
@@ -71,7 +77,7 @@ export class CartDocsSchemas {
         }
     }
 
-    public get clean() {
+    public get clean(): { schema: FastifySchema } {
         return {
             schema: {
                 tags: ["Carts"],

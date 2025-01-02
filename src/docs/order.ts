@@ -92,6 +92,10 @@ export class OrderDocsSchemas extends DocsSchemas {
         }
     }
 
+    public get update(): { schema: FastifySchema } {
+        return { schema: {} }
+    }
+
     public get delete(): { schema: FastifySchema } {
         return {
             schema: {

@@ -1,3 +1,4 @@
+import { FastifySchema } from "fastify"
 import { DocsSchemas } from "../interfaces/docs-schemas"
 import { ProductSchemas } from "../schemas/product"
 import { MessageResponses } from "../utils/message-responses"
@@ -7,7 +8,7 @@ export class ProductDocsSchemas extends DocsSchemas {
         super()
     }
 
-    public get create() {
+    public get create(): { schema: FastifySchema } {
         return {
             schema: {
                 tags: ["Products"],
@@ -21,12 +22,12 @@ export class ProductDocsSchemas extends DocsSchemas {
         }
     }
 
-    public get list() {
+    public get list(): { schema: FastifySchema } {
         return {
             schema: {
                 tags: ["Products"],
                 description: "List products",
-                responses: {
+                response: {
                     200: this.schema.listResponse,
                     ...MessageResponses([500]),
                 },
@@ -34,7 +35,7 @@ export class ProductDocsSchemas extends DocsSchemas {
         }
     }
 
-    public get get() {
+    public get get(): { schema: FastifySchema } {
         return {
             schema: {
                 tags: ["Products"],
@@ -48,7 +49,7 @@ export class ProductDocsSchemas extends DocsSchemas {
         }
     }
 
-    public get update() {
+    public get update(): { schema: FastifySchema } {
         return {
             schema: {
                 tags: ["Products"],
@@ -63,7 +64,7 @@ export class ProductDocsSchemas extends DocsSchemas {
         }
     }
 
-    public get delete() {
+    public get delete(): { schema: FastifySchema } {
         return {
             schema: {
                 tags: ["Products"],
