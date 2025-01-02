@@ -78,20 +78,6 @@ export class OrderDocsSchemas extends DocsSchemas {
         }
     }
 
-    public get info(): { schema: FastifySchema } {
-        return {
-            schema: {
-                tags: ["Orders"],
-                description: "Get order infos by ID",
-                params: this.schema.idParams,
-                response: {
-                    200: this.schema.info,
-                    ...MessageResponses([400, 404, 500]),
-                },
-            },
-        }
-    }
-
     public get update(): { schema: FastifySchema } {
         return { schema: {} }
     }
@@ -100,7 +86,7 @@ export class OrderDocsSchemas extends DocsSchemas {
         return {
             schema: {
                 tags: ["Orders"],
-                description: "Get order infos by ID",
+                description: "Delete order by ID",
                 params: this.schema.idParams,
                 response: {
                     ...MessageResponses([200, 400, 404, 500]),
