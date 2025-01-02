@@ -55,7 +55,7 @@ export class CartRoutes extends Routes {
 
         FabricRoute({
             app,
-            endpoint: "/cart/:id/item-cart",
+            endpoint: "/cart/:id/items-cart",
             method: "get",
             docs: this.docsSchema.listItemsCart,
             resource: this.resource.listItemsCart as RouteHandlerMethod,
