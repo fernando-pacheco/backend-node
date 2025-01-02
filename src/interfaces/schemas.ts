@@ -1,8 +1,8 @@
-import { z, ZodObject } from "zod"
+import { SchemaType } from "../types/schema"
 
 export abstract class Schemas {
-    abstract get response(): ZodObject<any>
-    abstract get create(): ZodObject<any>
-    abstract get update(): ZodObject<any>
-    abstract get idParams(): ZodObject<any>
+    public abstract readonly response: SchemaType
+    public abstract readonly create: SchemaType
+    public abstract readonly update: SchemaType
+    public abstract readonly idParams: SchemaType
 }
