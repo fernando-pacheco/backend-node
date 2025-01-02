@@ -29,6 +29,7 @@ export class UserServices {
     async getOrdersByUserID(id: string): Promise<Order[]> {
         const orders = await this.OrderModel.findMany({
             where: { user_id: id },
+            include: { cart: true, payment: true, user: true },
         })
 
         return orders

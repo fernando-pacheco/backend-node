@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { Schemas } from "../interfaces/schemas"
 import { SchemaType } from "../types/schema"
+import { PaymentMethod } from "@prisma/client"
 
 export class UserSchemas extends Schemas {
     public response: SchemaType = z.object({
@@ -11,15 +12,6 @@ export class UserSchemas extends Schemas {
     })
 
     public listResponse: SchemaType = z.array(this.response)
-
-    public listOrders: SchemaType = z.array(
-        z.object({
-            id: z.string(),
-            payment_id: z.string(),
-            user_id: z.string(),
-            cart_id: z.string(),
-        })
-    )
 
     public create: SchemaType = z.object({
         name: z.string().min(1, "Name is required"),
@@ -34,4 +26,36 @@ export class UserSchemas extends Schemas {
     public idParams: SchemaType = z.object({
         id: z.string().min(1, "User ID is required"),
     })
+
+    private payment: SchemaType = z.object({
+        id: z.string(),
+        type: z.string(),
+        payment_method: z.enum([
+            PaymentMethod.PIX,
+            PaymentMethod.CREDIT,
+            PaymentMethod.DEBIT,
+            PaymentMethod.WALLET,
+        ]),
+        value: z.number(),
+    })
+
+    private cart: SchemaType = z.object({
+        id: z.string(),
+    })
+
+    private user: SchemaType = z.object({
+        id: z.string(),
+        name: z.string(),
+        email: z.string().email(),
+        created_at: z.date().optional(),
+    })
+
+    public listOrders: SchemaType = z.array(
+        z.object({
+            id: z.string(),
+            payment: this.payment,
+            user: this.user,
+            cart: this.cart,
+        })
+    )
 }
