@@ -13,7 +13,7 @@ RUN pnpm install
 COPY . .
 
 RUN pnpm copy-prisma
-RUN pnpm prisma migrate dev
+RUN pnpm prisma migrate deploy
 RUN pnpm generate
 RUN pnpm build
 
