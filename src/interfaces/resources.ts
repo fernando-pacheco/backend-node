@@ -1,23 +1,34 @@
-import { FastifyReply, FastifyRequest } from "fastify"
+import { FastifyReply } from "fastify"
+import { RequestData } from "../types/resource"
 
 export abstract class Resources<T> {
     public abstract create(
-        request: FastifyRequest,
+        request: RequestData<T>,
         reply: FastifyReply
     ): Promise<void>
 
     public abstract get(
-        request: FastifyRequest,
+        request: RequestData<T>,
         reply: FastifyReply
     ): Promise<void>
 
     public abstract update(
-        request: FastifyRequest,
+        request: RequestData<T>,
         reply: FastifyReply
     ): Promise<void>
 
     public abstract delete(
-        request: FastifyRequest,
+        request: RequestData<T>,
         reply: FastifyReply
     ): Promise<void>
+
+    protected handleError(
+        reply: FastifyReply,
+        error: unknown,
+        statusCode = 500
+    ) {
+        const message =
+            error instanceof Error ? error.message : "Internal server error."
+        reply.status(statusCode).send({ message })
+    }
 }
