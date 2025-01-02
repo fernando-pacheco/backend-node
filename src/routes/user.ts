@@ -1,4 +1,4 @@
-import { FabricRoute } from "../utils/fabric-route"
+import { FactoryRoute } from "../utils/factory-route"
 import { UserDocsSchemas } from "../docs/user"
 import { UserResources } from "../resources/user"
 import { FastifyTypedInstance } from "../types/types"
@@ -19,7 +19,7 @@ export class UserRoutes extends Routes {
     }
 
     public userRegistersRoutes(app: FastifyTypedInstance) {
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/user",
             method: "post",
@@ -27,7 +27,7 @@ export class UserRoutes extends Routes {
             resource: this.resource.create as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/user",
             method: "get",
@@ -37,7 +37,7 @@ export class UserRoutes extends Routes {
     }
 
     public userHandlersRoutes(app: FastifyTypedInstance) {
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/user/:id",
             method: "get",
@@ -45,7 +45,7 @@ export class UserRoutes extends Routes {
             resource: this.resource.get as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/user/:id/orders",
             method: "get",
@@ -53,7 +53,7 @@ export class UserRoutes extends Routes {
             resource: this.resource.listOrders as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/user/:id",
             method: "put",
@@ -61,7 +61,7 @@ export class UserRoutes extends Routes {
             resource: this.resource.update as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/user/:id",
             method: "delete",

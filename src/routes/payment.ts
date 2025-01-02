@@ -3,7 +3,7 @@ import { PaymentDocsSchemas } from "../docs/payment"
 import { Routes } from "../interfaces/routes"
 import { PaymentResources } from "../resources/payment"
 import { FastifyTypedInstance } from "../types/types"
-import { FabricRoute } from "../utils/fabric-route"
+import { FactoryRoute } from "../utils/factory-route"
 
 export class PaymentRoutes extends Routes {
     constructor(
@@ -19,7 +19,7 @@ export class PaymentRoutes extends Routes {
     }
 
     private paymentRegistersRoutes(app: FastifyTypedInstance) {
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/payment",
             method: "post",
@@ -29,7 +29,7 @@ export class PaymentRoutes extends Routes {
     }
 
     private paymentHandlerRoutes(app: FastifyTypedInstance) {
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/payment/:id",
             method: "get",

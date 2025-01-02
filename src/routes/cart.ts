@@ -3,7 +3,7 @@ import { CartDocsSchemas } from "../docs/cart"
 import { Routes } from "../interfaces/routes"
 import { CartResources } from "../resources/cart"
 import { FastifyTypedInstance } from "../types/types"
-import { FabricRoute } from "../utils/fabric-route"
+import { FactoryRoute } from "../utils/factory-route"
 
 export class CartRoutes extends Routes {
     constructor(
@@ -19,7 +19,7 @@ export class CartRoutes extends Routes {
     }
 
     private cartRegistersRoutes(app: FastifyTypedInstance) {
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/cart",
             method: "post",
@@ -27,7 +27,7 @@ export class CartRoutes extends Routes {
             resource: this.resource.create as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/cart",
             method: "get",
@@ -37,7 +37,7 @@ export class CartRoutes extends Routes {
     }
 
     private cartHandlersRoutes(app: FastifyTypedInstance) {
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/cart/:id",
             method: "get",
@@ -45,7 +45,7 @@ export class CartRoutes extends Routes {
             resource: this.resource.get as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/cart/:id",
             method: "delete",
@@ -53,7 +53,7 @@ export class CartRoutes extends Routes {
             resource: this.resource.delete as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/cart/:id/items-cart",
             method: "get",
@@ -61,7 +61,7 @@ export class CartRoutes extends Routes {
             resource: this.resource.listItemsCart as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/cart/:id/clean",
             method: "delete",

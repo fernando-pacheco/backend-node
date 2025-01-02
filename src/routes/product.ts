@@ -3,7 +3,7 @@ import { ProductDocsSchemas } from "../docs/product"
 import { Routes } from "../interfaces/routes"
 import { ProductResources } from "../resources/product"
 import { FastifyTypedInstance } from "../types/types"
-import { FabricRoute } from "../utils/fabric-route"
+import { FactoryRoute } from "../utils/factory-route"
 
 export class ProductRoutes extends Routes {
     constructor(
@@ -19,7 +19,7 @@ export class ProductRoutes extends Routes {
     }
 
     private productRegistersRoutes(app: FastifyTypedInstance) {
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/product",
             method: "post",
@@ -27,7 +27,7 @@ export class ProductRoutes extends Routes {
             resource: this.resource.create as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/product",
             method: "get",
@@ -37,7 +37,7 @@ export class ProductRoutes extends Routes {
     }
 
     private productHandlersRoutes(app: FastifyTypedInstance) {
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/product/:id",
             method: "get",
@@ -45,7 +45,7 @@ export class ProductRoutes extends Routes {
             resource: this.resource.get as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/product/:id",
             method: "put",
@@ -53,7 +53,7 @@ export class ProductRoutes extends Routes {
             resource: this.resource.update as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/product/:id",
             method: "delete",

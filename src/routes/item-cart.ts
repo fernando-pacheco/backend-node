@@ -3,7 +3,7 @@ import { ItemCartDocsSchemas } from "../docs/item-cart"
 import { Routes } from "../interfaces/routes"
 import { ItemCartResources } from "../resources/item-cart"
 import { FastifyTypedInstance } from "../types/types"
-import { FabricRoute } from "../utils/fabric-route"
+import { FactoryRoute } from "../utils/factory-route"
 
 export class ItemCartRoutes extends Routes {
     constructor(
@@ -19,7 +19,7 @@ export class ItemCartRoutes extends Routes {
     }
 
     private itemCartRegistersRoutes(app: FastifyTypedInstance) {
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/item-cart",
             method: "post",
@@ -29,7 +29,7 @@ export class ItemCartRoutes extends Routes {
     }
 
     private itemCartHandlersRoutes(app: FastifyTypedInstance) {
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/item-cart/:id",
             method: "get",
@@ -37,7 +37,7 @@ export class ItemCartRoutes extends Routes {
             resource: this.resource.get as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/item-cart/:id",
             method: "put",
@@ -45,7 +45,7 @@ export class ItemCartRoutes extends Routes {
             resource: this.resource.update as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/item-cart/:id",
             method: "delete",

@@ -3,7 +3,7 @@ import { OrderDocsSchemas } from "../docs/order"
 import { Routes } from "../interfaces/routes"
 import { OrderResources } from "../resources/order"
 import { FastifyTypedInstance } from "../types/types"
-import { FabricRoute } from "../utils/fabric-route"
+import { FactoryRoute } from "../utils/factory-route"
 
 export class OrderRoutes extends Routes {
     constructor(
@@ -20,7 +20,7 @@ export class OrderRoutes extends Routes {
     }
 
     private orderRegistersRoutes(app: FastifyTypedInstance) {
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/order",
             method: "post",
@@ -30,7 +30,7 @@ export class OrderRoutes extends Routes {
     }
 
     private orderHandlersRoutes(app: FastifyTypedInstance) {
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/order/:id",
             method: "get",
@@ -38,7 +38,7 @@ export class OrderRoutes extends Routes {
             resource: this.resource.get as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/order/:id",
             method: "delete",
@@ -48,7 +48,7 @@ export class OrderRoutes extends Routes {
     }
 
     private orderInfoRoutes(app: FastifyTypedInstance) {
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/order/:id/cart",
             method: "get",
@@ -56,7 +56,7 @@ export class OrderRoutes extends Routes {
             resource: this.resource.getCart as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/order/:id/payment",
             method: "get",
@@ -64,7 +64,7 @@ export class OrderRoutes extends Routes {
             resource: this.resource.getPayment as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/order/:id/user",
             method: "get",
@@ -72,7 +72,7 @@ export class OrderRoutes extends Routes {
             resource: this.resource.getUser as RouteHandlerMethod,
         })
 
-        FabricRoute({
+        FactoryRoute({
             app,
             endpoint: "/order/:id/info",
             method: "get",
