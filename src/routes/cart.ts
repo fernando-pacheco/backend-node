@@ -39,14 +39,6 @@ export class CartRoutes extends Routes {
     private cartHandlersRoutes(app: FastifyTypedInstance) {
         FabricRoute({
             app,
-            endpoint: "/cart/:id/item-cart",
-            method: "get",
-            docs: this.docsSchema.listItemsCart,
-            resource: this.resource.listItemsCart as RouteHandlerMethod,
-        })
-
-        FabricRoute({
-            app,
             endpoint: "/cart/:id",
             method: "get",
             docs: this.docsSchema.get,
@@ -59,6 +51,14 @@ export class CartRoutes extends Routes {
             method: "delete",
             docs: this.docsSchema.delete,
             resource: this.resource.delete as RouteHandlerMethod,
+        })
+
+        FabricRoute({
+            app,
+            endpoint: "/cart/:id/item-cart",
+            method: "get",
+            docs: this.docsSchema.listItemsCart,
+            resource: this.resource.listItemsCart as RouteHandlerMethod,
         })
 
         FabricRoute({
