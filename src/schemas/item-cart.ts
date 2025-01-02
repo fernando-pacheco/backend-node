@@ -1,31 +1,32 @@
 import { z } from "zod"
 import { Schemas } from "../interfaces/schemas"
+import { SchemaType } from "../types/schema"
 
 export class ItemCartSchemas extends Schemas {
-    public readonly response = z.object({
+    public response: SchemaType = z.object({
         id: z.string(),
         product_id: z.string(),
         cart_id: z.string(),
         amount: z.number(),
     })
 
-    public readonly create = z.object({
+    public create: SchemaType = z.object({
         product_id: z.string(),
         cart_id: z.string(),
         amount: z.number().min(0),
     })
 
-    public readonly update = z.object({
+    public update: SchemaType = z.object({
         product_id: z.string().optional(),
         cart_id: z.string().optional(),
         amount: z.number().min(0).optional(),
     })
 
-    public readonly idParams = z.object({
+    public idParams: SchemaType = z.object({
         id: z.string().min(1, "ItemCart ID is required"),
     })
 
-    public readonly cartIDParams = z.object({
+    public cartIDParams: SchemaType = z.object({
         cart_id: z.string().min(1, "Cart ID is required"),
     })
 }

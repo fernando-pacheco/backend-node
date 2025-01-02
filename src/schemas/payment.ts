@@ -1,9 +1,10 @@
 import { z } from "zod"
 import { PaymentMethod } from "@prisma/client"
 import { Schemas } from "../interfaces/schemas"
+import { SchemaType } from "../types/schema"
 
 export class PaymentSchemas extends Schemas {
-    public readonly response = z.object({
+    public response: SchemaType = z.object({
         id: z.string(),
         type: z.string(),
         payment_method: z.enum([
@@ -15,7 +16,7 @@ export class PaymentSchemas extends Schemas {
         value: z.number(),
     })
 
-    public readonly create = z.object({
+    public create: SchemaType = z.object({
         type: z.string(),
         payment_method: z.enum([
             PaymentMethod.PIX,
@@ -26,7 +27,7 @@ export class PaymentSchemas extends Schemas {
         value: z.number().min(0),
     })
 
-    public readonly update = z.object({
+    public update: SchemaType = z.object({
         type: z.string().optional(),
         payment_method: z
             .enum([
@@ -39,7 +40,7 @@ export class PaymentSchemas extends Schemas {
         value: z.number().min(0).optional(),
     })
 
-    public readonly idParams = z.object({
+    public idParams: SchemaType = z.object({
         id: z.string().min(1, "Payment ID is required"),
     })
 }

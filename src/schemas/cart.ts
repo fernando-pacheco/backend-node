@@ -1,13 +1,19 @@
 import { z } from "zod"
+import { Schemas } from "../interfaces/schemas"
+import { SchemaType } from "../types/schema"
 
-export class CartSchemas {
-    public readonly response = z.object({
+export class CartSchemas extends Schemas {
+    public response = z.object({
         id: z.string(),
     })
 
-    public readonly listResponse = z.array(this.response)
+    public create: SchemaType = z.object({})
 
-    public readonly listItemsCart = z.array(
+    public update: SchemaType = z.object({})
+
+    public listResponse: SchemaType = z.array(this.response)
+
+    public listItemsCart: SchemaType = z.array(
         z.object({
             id: z.string(),
             cart_id: z.string(),
@@ -16,7 +22,7 @@ export class CartSchemas {
         })
     )
 
-    public readonly idParams = z.object({
+    public idParams: SchemaType = z.object({
         id: z.string().min(1, "Cart ID is required"),
     })
 }

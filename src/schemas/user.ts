@@ -1,17 +1,18 @@
 import { z } from "zod"
 import { Schemas } from "../interfaces/schemas"
+import { SchemaType } from "../types/schema"
 
 export class UserSchemas extends Schemas {
-    public readonly response = z.object({
+    public response: SchemaType = z.object({
         id: z.string(),
         name: z.string(),
         email: z.string().email(),
         created_at: z.date().optional(),
     })
 
-    public readonly listResponse = z.array(this.response)
+    public listResponse: SchemaType = z.array(this.response)
 
-    public readonly listOrders = z.array(
+    public listOrders: SchemaType = z.array(
         z.object({
             id: z.string(),
             payment_id: z.string(),
@@ -20,17 +21,17 @@ export class UserSchemas extends Schemas {
         })
     )
 
-    public readonly create = z.object({
+    public create: SchemaType = z.object({
         name: z.string().min(1, "Name is required"),
         email: z.string().email("Invalid email address"),
     })
 
-    public readonly update = z.object({
+    public update: SchemaType = z.object({
         name: z.string().optional(),
         email: z.string().email("Invalid email address").optional(),
     })
 
-    public readonly idParams = z.object({
+    public idParams: SchemaType = z.object({
         id: z.string().min(1, "User ID is required"),
     })
 }

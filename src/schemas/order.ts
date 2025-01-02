@@ -1,30 +1,31 @@
 import z from "zod"
 import { Schemas } from "../interfaces/schemas"
 import { PaymentMethod } from "@prisma/client"
+import { SchemaType } from "../types/schema"
 
 export class OrderSchemas extends Schemas {
-    public readonly response = z.object({
+    public response: SchemaType = z.object({
         id: z.string(),
         payment_id: z.string(),
         user_id: z.string(),
         cart_id: z.string(),
     })
 
-    public readonly listResponse = [this.response]
+    public listResponse: SchemaType = z.array(this.response)
 
-    public readonly idParams = z.object({
+    public idParams: SchemaType = z.object({
         id: z.string().min(1, "Order ID is required"),
     })
 
-    public readonly create = z.object({
+    public create: SchemaType = z.object({
         payment_id: z.string().min(1, "Payment ID is required"),
         user_id: z.string().min(1, "User ID is required"),
         cart_id: z.string().min(1, "Cart ID is required"),
     })
 
-    public readonly update = z.object({})
+    public update: SchemaType = z.object({})
 
-    public readonly getPayment = z.object({
+    public getPayment: SchemaType = z.object({
         id: z.string(),
         type: z.string(),
         payment_method: z.enum([
@@ -36,7 +37,7 @@ export class OrderSchemas extends Schemas {
         value: z.number(),
     })
 
-    public readonly getCart = z.object({
+    public getCart: SchemaType = z.object({
         id: z.string(),
         itemsCart: z.array(
             z.object({
@@ -51,14 +52,14 @@ export class OrderSchemas extends Schemas {
         ),
     })
 
-    public readonly getUser = z.object({
+    public getUser: SchemaType = z.object({
         id: z.string(),
         name: z.string(),
         email: z.string().email(),
         created_at: z.date().optional(),
     })
 
-    public readonly info = z.object({
+    public info: SchemaType = z.object({
         id: z.string(),
         payment: this.getPayment,
         user: this.getUser,
