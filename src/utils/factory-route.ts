@@ -1,4 +1,4 @@
-import { FactoryRouteProps } from "../interfaces/fabric-route"
+import { FactoryRouteProps } from "../interfaces/factory-route"
 
 export function FactoryRoute({
     app,
