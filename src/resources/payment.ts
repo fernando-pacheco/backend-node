@@ -22,6 +22,7 @@ export class PaymentResources extends Resources<Payment> {
             type: string
             payment_method: $Enums.PaymentMethod
             value: number
+            created_at: Date | null
         }>,
         reply: FastifyReply
     ): Promise<void> {

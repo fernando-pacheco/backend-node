@@ -24,6 +24,7 @@ export class ItemCartResources extends Resources<ItemCart> {
             product_id: string
             amount: number
             cart_id: string
+            created_at: Date | null
         }>,
         reply: FastifyReply
     ): Promise<void> {
@@ -60,6 +61,7 @@ export class ItemCartResources extends Resources<ItemCart> {
             product_id: string
             amount: number
             cart_id: string
+            created_at: Date | null
         }>,
         reply: FastifyReply
     ): Promise<void> {

@@ -20,7 +20,12 @@ export class ProductResources extends Resources<Product> {
     }
 
     public async create(
-        request: RequestData<{ name: string; id: string; price: number }>,
+        request: RequestData<{
+            name: string
+            id: string
+            price: number
+            created_at: Date | null
+        }>,
         reply: FastifyReply
     ): Promise<void> {
         try {
@@ -54,7 +59,12 @@ export class ProductResources extends Resources<Product> {
     }
 
     public async update(
-        request: RequestData<{ name: string; id: string; price: number }>,
+        request: RequestData<{
+            name: string
+            id: string
+            price: number
+            created_at: Date | null
+        }>,
         reply: FastifyReply
     ): Promise<void> {
         const { id } = request.params
