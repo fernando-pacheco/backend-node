@@ -138,8 +138,20 @@ describe("UserServices", () => {
     describe("getOrdersByUserID", () => {
         it("should return a list of orders for a user", async () => {
             const orders: Order[] = [
-                { id: "1", user_id: "1", cart_id: "", payment_id: "" },
-                { id: "2", user_id: "1", cart_id: "", payment_id: "" },
+                {
+                    id: "1",
+                    user_id: "1",
+                    cart_id: "",
+                    payment_id: "",
+                    created_at: new Date(),
+                },
+                {
+                    id: "2",
+                    user_id: "1",
+                    cart_id: "",
+                    payment_id: "",
+                    created_at: new Date(),
+                },
             ]
 
             jest.spyOn(prismaMock.order, "findMany").mockResolvedValue(orders)

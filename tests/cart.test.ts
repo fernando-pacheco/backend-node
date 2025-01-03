@@ -18,6 +18,7 @@ describe("CartServices", () => {
         it("should create a cart", async () => {
             const cartData: Cart = {
                 id: "1",
+                created_at: new Date(),
             }
 
             jest.spyOn(prismaMock.cart, "create").mockResolvedValue(cartData)
@@ -26,7 +27,7 @@ describe("CartServices", () => {
 
             expect(prismaMock.cart.create).toHaveBeenCalledWith({
                 data: {},
-                select: { id: true },
+                select: { id: true, created_at: true },
             })
             expect(result).toEqual(cartData)
         })
@@ -36,6 +37,7 @@ describe("CartServices", () => {
         it("should return a cart by ID", async () => {
             const cart: Cart = {
                 id: "1",
+                created_at: new Date(),
             }
 
             jest.spyOn(prismaMock.cart, "findUnique").mockResolvedValue(cart)
@@ -62,7 +64,10 @@ describe("CartServices", () => {
 
     describe("getCarts", () => {
         it("should return a list of carts", async () => {
-            const carts: Cart[] = [{ id: "1" }, { id: "2" }]
+            const carts: Cart[] = [
+                { id: "1", created_at: new Date() },
+                { id: "2", created_at: new Date() },
+            ]
 
             jest.spyOn(prismaMock.cart, "findMany").mockResolvedValue(carts)
 
@@ -76,8 +81,20 @@ describe("CartServices", () => {
     describe("listItemsCartByCartID", () => {
         it("should return a list of items in the cart", async () => {
             const itemsCart: ItemCart[] = [
-                { id: "1", cart_id: "1", product_id: "product1", amount: 2 },
-                { id: "2", cart_id: "1", product_id: "product2", amount: 3 },
+                {
+                    id: "1",
+                    cart_id: "1",
+                    product_id: "product1",
+                    amount: 2,
+                    created_at: new Date(),
+                },
+                {
+                    id: "2",
+                    cart_id: "1",
+                    product_id: "product2",
+                    amount: 3,
+                    created_at: new Date(),
+                },
             ]
 
             jest.spyOn(prismaMock.itemCart, "findMany").mockResolvedValue(
@@ -98,6 +115,7 @@ describe("CartServices", () => {
         it("should delete a cart by ID", async () => {
             jest.spyOn(prismaMock.cart, "delete").mockResolvedValue({
                 id: "1",
+                created_at: new Date(),
             })
 
             await cartService.deleteCartByID("1")

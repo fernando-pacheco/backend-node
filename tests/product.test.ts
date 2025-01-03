@@ -20,6 +20,7 @@ describe("ProductServices", () => {
                 id: "1",
                 name: "Test Product",
                 price: 100,
+                created_at: new Date(),
             }
 
             jest.spyOn(prismaMock.product, "create").mockResolvedValue(
@@ -41,8 +42,18 @@ describe("ProductServices", () => {
     describe("getProducts", () => {
         it("should return a list of products", async () => {
             const products: Product[] = [
-                { id: "1", name: "Product 1", price: 100 },
-                { id: "2", name: "Product 2", price: 200 },
+                {
+                    id: "1",
+                    name: "Product 1",
+                    price: 100,
+                    created_at: new Date(),
+                },
+                {
+                    id: "2",
+                    name: "Product 2",
+                    price: 200,
+                    created_at: new Date(),
+                },
             ]
 
             jest.spyOn(prismaMock.product, "findMany").mockResolvedValue(
@@ -62,6 +73,7 @@ describe("ProductServices", () => {
                 id: "1",
                 name: "Test Product",
                 price: 100,
+                created_at: new Date(),
             }
 
             jest.spyOn(prismaMock.product, "findUnique").mockResolvedValue(
@@ -94,6 +106,7 @@ describe("ProductServices", () => {
                 id: "1",
                 name: "Updated Product",
                 price: 150,
+                created_at: new Date(),
             }
 
             jest.spyOn(prismaMock.product, "update").mockResolvedValue(
@@ -122,6 +135,7 @@ describe("ProductServices", () => {
                 id: "1",
                 name: "Sample Product",
                 price: 100,
+                created_at: new Date(),
             })
 
             await productService.deleteProductByID("1")

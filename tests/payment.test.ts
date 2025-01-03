@@ -21,6 +21,7 @@ describe("PaymentServices", () => {
                 type: "Invoice",
                 payment_method: PaymentMethod.CREDIT,
                 value: 150.0,
+                created_at: new Date(),
             }
 
             jest.spyOn(prismaMock.payment, "create").mockResolvedValue(
@@ -47,6 +48,7 @@ describe("PaymentServices", () => {
                 type: "Invoice",
                 payment_method: PaymentMethod.PIX,
                 value: 100.0,
+                created_at: new Date(),
             }
 
             jest.spyOn(prismaMock.payment, "findUnique").mockResolvedValue(

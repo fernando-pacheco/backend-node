@@ -40,6 +40,7 @@ describe("OrderServices", () => {
                 payment_id: "payment1",
                 cart_id: "cart1",
                 user_id: "user1",
+                created_at: new Date(),
             }
 
             jest.spyOn(prismaMock.order, "create").mockResolvedValue(orderData)
@@ -52,6 +53,7 @@ describe("OrderServices", () => {
                     cart_id: orderData.cart_id,
                     user_id: orderData.user_id,
                 },
+                include: { cart: true, payment: true, user: true },
             })
             expect(result).toEqual(orderData)
         })
@@ -64,6 +66,7 @@ describe("OrderServices", () => {
                 payment_id: "payment1",
                 cart_id: "cart1",
                 user_id: "user1",
+                created_at: new Date(),
             }
 
             jest.spyOn(prismaMock.order, "findUnique").mockResolvedValue(order)
@@ -72,7 +75,13 @@ describe("OrderServices", () => {
 
             expect(prismaMock.order.findUnique).toHaveBeenCalledWith({
                 where: { id: "1" },
-                include: { payment: true, cart: true, user: true },
+                include: {
+                    payment: true,
+                    cart: {
+                        include: { items_cart: { include: { product: true } } },
+                    },
+                    user: true,
+                },
             })
             expect(result).toEqual(order)
         })
@@ -84,7 +93,13 @@ describe("OrderServices", () => {
 
             expect(prismaMock.order.findUnique).toHaveBeenCalledWith({
                 where: { id: "999" },
-                include: { payment: true, cart: true, user: true },
+                include: {
+                    payment: true,
+                    cart: {
+                        include: { items_cart: { include: { product: true } } },
+                    },
+                    user: true,
+                },
             })
             expect(result).toBeNull()
         })
@@ -97,6 +112,7 @@ describe("OrderServices", () => {
                 payment_id: "payment1",
                 cart_id: "cart1",
                 user_id: "user1",
+                created_at: new Date(),
             }
 
             const user: User = {
@@ -125,6 +141,7 @@ describe("OrderServices", () => {
                 payment_id: "payment1",
                 cart_id: "cart1",
                 user_id: "user1",
+                created_at: new Date(),
             }
 
             const payment: Payment = {
@@ -132,6 +149,7 @@ describe("OrderServices", () => {
                 type: "CREDIT",
                 payment_method: "CREDIT",
                 value: 100,
+                created_at: new Date(),
             }
 
             jest.spyOn(prismaMock.order, "findUniqueOrThrow").mockResolvedValue(
@@ -157,15 +175,17 @@ describe("OrderServices", () => {
                 payment_id: "payment1",
                 cart_id: "cart1",
                 user_id: "user1",
+                created_at: new Date(),
             }
 
-            const cart: Cart = { id: "cart1" }
+            const cart: Cart = { id: "cart1", created_at: new Date() }
             const itemsCart = [
                 {
                     id: "item1",
                     product_id: "product1",
                     cart_id: "cart1",
                     amount: 2,
+                    created_at: new Date(),
                 },
             ]
 
@@ -184,7 +204,7 @@ describe("OrderServices", () => {
             )
             expect(result).toEqual({
                 id: "cart1",
-                itemsCart,
+                items_cart: itemsCart,
             })
         })
     })
@@ -196,6 +216,7 @@ describe("OrderServices", () => {
                 payment_id: "payment1",
                 cart_id: "cart1",
                 user_id: "user1",
+                created_at: new Date(),
             }
 
             const user: User = {
@@ -209,14 +230,16 @@ describe("OrderServices", () => {
                 type: "CREDIT",
                 payment_method: "CREDIT",
                 value: 100,
+                created_at: new Date(),
             }
-            const cart: Cart = { id: "cart1" }
+            const cart: Cart = { id: "cart1", created_at: new Date() }
             const itemsCart = [
                 {
                     id: "item1",
                     product_id: "product1",
                     cart_id: "cart1",
                     amount: 2,
+                    created_at: new Date(),
                 },
             ]
 
@@ -237,7 +260,7 @@ describe("OrderServices", () => {
             expect(result).toEqual({
                 id: "1",
                 payment,
-                cart: { id: "cart1", itemsCart },
+                cart: { id: "cart1", items_cart: itemsCart },
                 user,
             })
         })
@@ -250,6 +273,7 @@ describe("OrderServices", () => {
                 payment_id: "payment1",
                 cart_id: "cart1",
                 user_id: "user1",
+                created_at: new Date(),
             })
 
             await orderService.deleteOrderByID("1")

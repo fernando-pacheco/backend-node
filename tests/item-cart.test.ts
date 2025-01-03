@@ -21,6 +21,7 @@ describe("ItemCartServices", () => {
                 product_id: "product1",
                 cart_id: "cart1",
                 amount: 2,
+                created_at: new Date(),
             }
 
             jest.spyOn(prismaMock.itemCart, "create").mockResolvedValue(
@@ -35,6 +36,7 @@ describe("ItemCartServices", () => {
                     cart_id: itemCartData.cart_id,
                     amount: itemCartData.amount,
                 },
+                include: { product: true },
             })
             expect(result).toEqual(itemCartData)
         })
@@ -47,6 +49,7 @@ describe("ItemCartServices", () => {
                 product_id: "product1",
                 cart_id: "cart1",
                 amount: 2,
+                created_at: new Date(),
             }
 
             jest.spyOn(prismaMock.itemCart, "findUnique").mockResolvedValue(
@@ -84,6 +87,7 @@ describe("ItemCartServices", () => {
                 product_id: "product1",
                 cart_id: "cart1",
                 amount: 3,
+                created_at: new Date(),
             }
 
             jest.spyOn(prismaMock.itemCart, "update").mockResolvedValue(
@@ -114,6 +118,7 @@ describe("ItemCartServices", () => {
                 product_id: "product1",
                 cart_id: "cart1",
                 amount: 2,
+                created_at: new Date(),
             })
 
             await itemCartService.deleteItemCart("1")
