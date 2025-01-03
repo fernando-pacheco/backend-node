@@ -15,6 +15,7 @@ export class CartServices {
             data: {},
             select: {
                 id: true,
+                created_at: true,
             },
         })
         return cart
