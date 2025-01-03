@@ -15,6 +15,7 @@ export class ItemCartServices {
                 cart_id: body.cart_id,
                 amount: body.amount,
             },
+            include: { product: true },
         })
         return itemCart
     }

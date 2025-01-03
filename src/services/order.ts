@@ -26,6 +26,7 @@ export class OrderServices {
                 cart_id: body.cart_id,
                 user_id: body.user_id,
             },
+            include: { cart: true, payment: true, user: true },
         })
 
         return order
@@ -34,15 +35,21 @@ export class OrderServices {
     async getOrderByID(id: string): Promise<Order | null> {
         const order = await this.OrderModel.findUnique({
             where: { id },
-            include: { payment: true, cart: true, user: true },
+            include: {
+                payment: true,
+                cart: {
+                    include: { items_cart: { include: { product: true } } },
+                },
+                user: true,
+            },
         })
-
         return order
     }
 
     async getUserByOrderID(id: string): Promise<User | null> {
         const { user_id } = await this.OrderModel.findUniqueOrThrow({
             where: { id },
+            include: { user: true },
         })
 
         return await this.userService.getUserByID(user_id)
@@ -51,6 +58,7 @@ export class OrderServices {
     async getPaymentByOrderID(id: string): Promise<Payment | null> {
         const { payment_id } = await this.OrderModel.findUniqueOrThrow({
             where: { id },
+            include: { payment: true },
         })
 
         return await this.paymentService.getPaymentByID(payment_id)
@@ -63,7 +71,7 @@ export class OrderServices {
 
         return {
             id: cart_id,
-            itemsCart: await this.cartService.listItemsCartByCartID(cart_id),
+            items_cart: await this.cartService.listItemsCartByCartID(cart_id),
         }
     }
 

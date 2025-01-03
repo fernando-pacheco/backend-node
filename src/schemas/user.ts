@@ -8,7 +8,6 @@ export class UserSchemas extends Schemas {
         id: z.string(),
         name: z.string(),
         email: z.string().email(),
-        created_at: z.date().optional(),
     })
 
     public listResponse: SchemaType = z.array(this.response)
@@ -47,7 +46,6 @@ export class UserSchemas extends Schemas {
         id: z.string(),
         name: z.string(),
         email: z.string().email(),
-        created_at: z.date().optional(),
     })
 
     public listOrders: SchemaType = z.array(

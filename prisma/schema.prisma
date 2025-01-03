@@ -9,10 +9,10 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   name       String
-  email      String   @unique
-  created_at DateTime @default(now())
+  email      String    @unique
+  created_at DateTime? @default(now())
   orders     Order[]
 }
 
@@ -22,31 +22,35 @@ model Payment {
   payment_method PaymentMethod
   value          Float
   order          Order?
+  created_at     DateTime?     @default(now())
 }
 
 model Order {
-  id         String  @id @default(cuid())
-  payment_id String  @unique
+  id         String    @id @default(cuid())
+  payment_id String    @unique
   user_id    String
-  cart_id    String  @unique
-  cart       Cart    @relation(fields: [cart_id], references: [id], onDelete: Cascade)
-  payment    Payment @relation(fields: [payment_id], references: [id], onDelete: Cascade)
-  user       User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  cart_id    String    @unique
+  cart       Cart      @relation(fields: [cart_id], references: [id], onDelete: Cascade)
+  payment    Payment   @relation(fields: [payment_id], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  created_at DateTime? @default(now())
 }
 
 model ItemCart {
-  id         String  @id @default(cuid())
+  id         String    @id @default(cuid())
   product_id String
   amount     Int
   cart_id    String
-  cart       Cart    @relation(fields: [cart_id], references: [id], onDelete: Cascade)
-  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  cart       Cart      @relation(fields: [cart_id], references: [id], onDelete: Cascade)
+  product    Product   @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  created_at DateTime? @default(now())
 }
 
 model Cart {
   id         String     @id @default(cuid())
   items_cart ItemCart[]
   order      Order?
+  created_at DateTime?  @default(now())
 }
 
 model Product {
@@ -54,6 +58,7 @@ model Product {
   name       String
   price      Float
   items_cart ItemCart[]
+  created_at DateTime?  @default(now())
 }
 
 enum PaymentMethod {

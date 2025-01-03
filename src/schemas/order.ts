@@ -30,7 +30,7 @@ export class OrderSchemas extends Schemas {
 
     public getCart: SchemaType = z.object({
         id: z.string(),
-        itemsCart: z.array(
+        items_cart: z.array(
             z.object({
                 id: z.string(),
                 product: z.object({
@@ -47,7 +47,6 @@ export class OrderSchemas extends Schemas {
         id: z.string(),
         name: z.string(),
         email: z.string().email(),
-        created_at: z.date().optional(),
     })
 
     public response: SchemaType = z.object({
