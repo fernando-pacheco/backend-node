@@ -17,9 +17,9 @@ describe("PaymentServices", () => {
     describe("createPayment", () => {
         it("should create a payment", async () => {
             const paymentData: Payment = {
-                id: "1", // Valor do ID gerado pelo Prisma
+                id: "1",
                 type: "Invoice",
-                payment_method: PaymentMethod.CREDIT, // Usando PaymentMethod do Prisma
+                payment_method: PaymentMethod.CREDIT,
                 value: 150.0,
             }
 
@@ -74,7 +74,7 @@ describe("PaymentServices", () => {
     })
 
     describe("getPaymentByOrderID", () => {
-        it("should return null (as this method is not implemented)", async () => {
+        it("should return null", async () => {
             const result = await paymentService.getPaymentByOrderID("1")
             expect(result).toBeNull()
         })
